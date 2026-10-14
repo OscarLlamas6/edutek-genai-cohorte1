@@ -1,0 +1,69 @@
+# ───────── Secretos y credenciales (NUNCA se suben) ─────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials*.json
+.secrets*
+
+# ───────── Entornos virtuales y Python ─────────
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# ───────── Jupyter ─────────
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+.virtual_documents/
+
+# ───────── Datos y artefactos generados localmente ─────────
+# Bases vectoriales locales (Chroma, SQLite, etc.)
+chroma_db/
+chroma/
+.chroma/
+*.sqlite
+*.sqlite3
+*.db
+# Modelos descargados (pesos)
+*.gguf
+*.safetensors
+*.bin
+*.onnx
+models/
+# Salidas, registros y caché de ejecuciones
+logs/
+*.log
+outputs/
+.cache/
+memoria_local/
+# Datos reales o privados: usa siempre datos de ejemplo
+datos_privados/
+*.csv.private
+
+# ───────── Editores y sistema operativo ─────────
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ───────── Node (módulos con MCP / n8n) ─────────
+node_modules/
+
+# ───────── Docker local ─────────
+docker-compose.override.yml
+.n8n/
+n8n_data/

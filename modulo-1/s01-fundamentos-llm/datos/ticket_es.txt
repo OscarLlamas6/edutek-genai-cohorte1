@@ -1,0 +1,8 @@
+Asunto: Servidor de aplicaciones no responde tras la ventana de mantenimiento
+
+Buenas tardes. Desde las 02:15 de esta madrugada el servidor app-prod-03 dejó de responder
+a las peticiones del balanceador. El certificado TLS del servicio de facturación expiró durante
+la ventana de mantenimiento y el balanceador rechaza todas las conexiones entrantes. Los
+usuarios de contabilidad reportan que no pueden emitir facturas. Ya intentamos reiniciar el
+servicio sin éxito. Necesitamos renovar el certificado y validar que la cadena completa quede
+instalada antes de las 08:00, cuando inicia el cierre mensual.

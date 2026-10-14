@@ -1,0 +1,7 @@
+def verificar_certificado(host: str, dias_minimos: int = 15) -> bool:
+    """Devuelve True si el certificado del host vence en más de `dias_minimos` días."""
+    ctx = ssl.create_default_context()
+    with socket.create_connection((host, 443), timeout=5) as sock:
+        with ctx.wrap_socket(sock, server_hostname=host) as ssock:
+            vence = ssl.cert_time_to_seconds(ssock.getpeercert()["notAfter"])
+    return (vence - time.time()) / 86400 > dias_minimos

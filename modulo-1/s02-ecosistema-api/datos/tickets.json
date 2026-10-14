@@ -1,0 +1,8 @@
+[
+  {"id": "T-001", "texto": "No puedo conectarme a la VPN desde casa desde esta mañana, me dice credenciales inválidas aunque no cambié mi contraseña.", "categoria_esperada": "accesos"},
+  {"id": "T-002", "texto": "El switch del piso 3 reinicia cada pocos minutos y la gente de contabilidad se queda sin red.", "categoria_esperada": "red"},
+  {"id": "T-003", "texto": "La aplicación de nómina muestra un error 500 cuando intento generar el reporte quincenal.", "categoria_esperada": "software"},
+  {"id": "T-004", "texto": "El disco del servidor de archivos está al 98% y los usuarios ya no pueden guardar documentos.", "categoria_esperada": "hardware"},
+  {"id": "T-005", "texto": "Necesito acceso de solo lectura al repositorio de contratos para auditoría, aprobado por mi jefatura.", "categoria_esperada": "accesos"},
+  {"id": "T-006", "texto": "¿Pueden recomendarme una silla ergonómica para la oficina?", "categoria_esperada": "otro"}
+]

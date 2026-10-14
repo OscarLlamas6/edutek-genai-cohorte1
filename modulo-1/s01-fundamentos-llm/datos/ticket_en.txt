@@ -1,0 +1,8 @@
+Subject: Application server not responding after the maintenance window
+
+Good afternoon. Since 02:15 this morning the app-prod-03 server stopped answering requests
+from the load balancer. The TLS certificate of the billing service expired during the
+maintenance window and the load balancer rejects all incoming connections. Accounting users
+report that they cannot issue invoices. We already tried restarting the service without success.
+We need to renew the certificate and verify that the full chain is installed before 08:00,
+when the monthly closing starts.
