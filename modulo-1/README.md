@@ -13,9 +13,8 @@ Cada sesión es un **proyecto independiente** (su propio entorno, su propia vers
 | 1 | [S1](s01-fundamentos-llm/) | Fundamentos del LLM y ventanas de contexto | 3.12 | ✅ | Disponible |
 | 1 | [S2](s02-ecosistema-api/) | Ecosistema de modelos y consumo vía API | 3.12 | ✅ | Disponible |
 | 1 | [S3](s03-prompting-contexto/) | Prompting y context engineering | 3.12 | ✅ | Disponible |
-| 2 | S4 | Embeddings y espacio vectorial | — | — | Próximamente |
-| 2 | S5 | Bases de datos vectoriales | — | — | Próximamente |
-| 2 | S6 | Fundamentos de RAG | — | — | Próximamente |
+| 2 | [S4](s04-embeddings-bases-vectoriales/) | Embeddings y bases de datos vectoriales (Neon y Pinecone) | 3.12 | ✅ | Disponible |
+| 2 | [S5](s05-fundamentos-rag/) | Fundamentos de RAG y un RAG simple con citas | 3.12 | ✅ | Disponible |
 | 3 | S7 | RAG en profundidad: chunking y recuperación | — | — | Próximamente |
 | 3 | S8 | RAG: evaluación y alucinaciones | — | — | Próximamente |
 | 3 | S9 | Tool calling / function calling | — | — | Próximamente |

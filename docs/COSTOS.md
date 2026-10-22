@@ -14,8 +14,16 @@ Queremos ser **100 % transparentes** contigo. Este documento dice qué cuesta di
 | Conteo de tokens del proveedor | Anthropic (`count_tokens`): **gratis**, con límite de peticiones. OpenAI (`responses.input_tokens.count`): no genera texto; confirma en su página de precios si se factura | Sesión 1 |
 | Consulta de la lista de modelos del proveedor | Gratis (no genera tokens) | Sesión 2 |
 | Peticiones **rechazadas** con error (400, 401, 404) | No se cobran: no generan tokens | Sesión 2 |
+| **Embeddings locales** (LM Studio, `nomic-embed-text-v2-moe`) | Sin cobro por token | Sesiones 4 y 5 |
+| **Embeddings de OpenAI** (opcional, `text-embedding-3-small`) | Pago por uso: ≈ US$ 0.02 por millón de tokens (fracciones de centavo en el curso) | Sesiones 4 y 5 |
+| **Neon** (PostgreSQL + pgvector), plan **Free** | US$ 0, **sin tarjeta**; cuota de 1 GB y 100 CU-horas por proyecto | Sesiones 4 y 5 |
+| **Pinecone**, plan **Starter** | US$ 0; cuota de 2 GB, 2 M unidades de escritura y 1 M de lectura al mes, 5 índices | Sesiones 4 y 5 |
 
-Más adelante pueden aparecer otros servicios (por ejemplo, un proveedor de embeddings). **Se avisará de forma explícita en el README de cada sesión antes de usarlos.**
+Más adelante pueden aparecer otros servicios. **Se avisará de forma explícita en el README de cada sesión antes de usarlos.**
+
+### Neon y Pinecone: cuotas, no dinero
+
+Con los planes gratuitos **no se te cobra**: si te pasas de la cuota, el servicio se limita o se detiene hasta el mes siguiente (o hasta que decidas subir de plan). Los planes de pago (Neon Launch/Scale, Pinecone Standard con mínimo mensual) **solo se activan si tú los contratas**. Los precios cambian: confirma en [neon.com/pricing](https://neon.com/pricing) y [pinecone.io/pricing](https://www.pinecone.io/pricing/). Guías de cuenta: [`CUENTA_NEON.md`](CUENTA_NEON.md) y [`CUENTA_PINECONE.md`](CUENTA_PINECONE.md).
 
 ## Cómo se calcula el costo de una llamada
 
@@ -46,7 +54,9 @@ Estimaciones calculadas con las llamadas del notebook y de las prácticas. Tu ga
 | S1 · Fundamentos del LLM | ~20 | < US$ 0.01 | US$ 0 (todo local; `--exacto` no genera texto) |
 | S2 · Ecosistema y API | ~8 a 12 | < US$ 0.01 | ~US$ 0.0003 por ejecución |
 | S3 · Prompting y context engineering | ~50 | < US$ 0.01 | ~US$ 0.001 por evaluación de 10 casos |
-| S4 a S15 | _Se publicará en cada sesión_ | | |
+| S4 · Embeddings y bases vectoriales | 0 con embeddings locales | US$ 0 (con embeddings de OpenAI: < US$ 0.001) | US$ 0 (con OpenAI: fracciones de centavo) |
+| S5 · Fundamentos de RAG | ~25 al LLM (con modelo de proveedor); +14 por cada proveedor extra que compares | < US$ 0.02 (US$ 0 con `RAG_PROVIDER=local`) | ≈ US$ 0.0005 por pregunta |
+| S7 a S15 | _Se publicará en cada sesión_ | | |
 
 ## Cómo vas a reconocer lo que cuesta dinero
 

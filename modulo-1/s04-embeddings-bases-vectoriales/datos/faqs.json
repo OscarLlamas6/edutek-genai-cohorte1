@@ -1,0 +1,146 @@
+[
+  {
+    "id": "F01",
+    "pregunta": "¿Cómo restablezco mi contraseña de la red corporativa?",
+    "respuesta": "Entra al portal de autoservicio, elige «Olvidé mi contraseña» y sigue los pasos con el código que llega a tu teléfono registrado. Si no tienes teléfono registrado, abre un ticket a la mesa de ayuda.",
+    "categoria": "accesos"
+  },
+  {
+    "id": "F02",
+    "pregunta": "¿Cada cuánto vence mi contraseña?",
+    "respuesta": "Las contraseñas vencen cada 90 días. El sistema te avisa por correo 10 días antes. No puedes reutilizar tus últimas 5 contraseñas.",
+    "categoria": "accesos"
+  },
+  {
+    "id": "F03",
+    "pregunta": "Mi cuenta se bloqueó después de varios intentos fallidos, ¿qué hago?",
+    "respuesta": "Tras 5 intentos fallidos la cuenta se bloquea durante 30 minutos. Puedes esperar o desbloquearla desde el portal de autoservicio con tu segundo factor.",
+    "categoria": "accesos"
+  },
+  {
+    "id": "F04",
+    "pregunta": "¿Cómo configuro la VPN en mi laptop?",
+    "respuesta": "Instala el cliente VPN corporativo desde el portal de software, inicia sesión con tu usuario y tu segundo factor, y elige el perfil «Oficina central». La guía con capturas está en la intranet.",
+    "categoria": "redes"
+  },
+  {
+    "id": "F05",
+    "pregunta": "La VPN se conecta pero no puedo abrir los sistemas internos",
+    "respuesta": "Revisa que estés usando el perfil correcto y que tu equipo no tenga otra VPN activa. Si el problema continúa, reinicia el cliente y abre un ticket indicando la hora del fallo.",
+    "categoria": "redes"
+  },
+  {
+    "id": "F06",
+    "pregunta": "¿Cómo conecto mi equipo al Wi-Fi de la oficina?",
+    "respuesta": "Selecciona la red «CORP-WIFI», inicia sesión con tu usuario corporativo y acepta el certificado. La red «INVITADOS» es solo para visitas y no accede a sistemas internos.",
+    "categoria": "redes"
+  },
+  {
+    "id": "F07",
+    "pregunta": "Mi internet está muy lento solo en la sucursal norte",
+    "respuesta": "Reporta el ticket con el piso y la hora. El equipo de redes revisa primero el enlace de la sucursal y el estado del switch. Mientras tanto, usa la conexión por cable si es posible.",
+    "categoria": "redes"
+  },
+  {
+    "id": "F08",
+    "pregunta": "¿Cómo solicito acceso a una carpeta compartida?",
+    "respuesta": "Abre un ticket de tipo «Acceso» con el nombre de la carpeta y la aprobación de tu jefatura. El acceso se concede en un máximo de un día hábil.",
+    "categoria": "accesos"
+  },
+  {
+    "id": "F09",
+    "pregunta": "¿Cómo pido acceso de solo lectura a un repositorio de código?",
+    "respuesta": "Solicita el acceso en el portal de ingeniería indicando el repositorio y el motivo. Un responsable del repositorio debe aprobarlo; no se otorgan accesos de escritura sin revisión.",
+    "categoria": "accesos"
+  },
+  {
+    "id": "F10",
+    "pregunta": "El servidor de aplicaciones no responde, ¿a quién aviso?",
+    "respuesta": "Abre un ticket de prioridad alta y llama a la guardia de infraestructura si afecta a usuarios de negocio. Incluye el nombre del servidor y desde cuándo ocurre.",
+    "categoria": "incidentes"
+  },
+  {
+    "id": "F11",
+    "pregunta": "Aparece una advertencia de certificado vencido en un sitio interno",
+    "respuesta": "Un certificado vencido impide conexiones seguras. Reporta el sitio a seguridad; los certificados se renuevan 15 días antes de su expiración y el equipo de plataforma es el responsable.",
+    "categoria": "incidentes"
+  },
+  {
+    "id": "F12",
+    "pregunta": "¿Cómo reporto un correo sospechoso de phishing?",
+    "respuesta": "No abras enlaces ni adjuntos. Usa el botón «Reportar phishing» del cliente de correo o reenvía el mensaje a seguridad. Si ya hiciste clic, cambia tu contraseña y avisa de inmediato.",
+    "categoria": "seguridad"
+  },
+  {
+    "id": "F13",
+    "pregunta": "Creo que alguien más usó mi cuenta, ¿qué debo hacer?",
+    "respuesta": "Cambia tu contraseña, cierra todas tus sesiones desde el portal y reporta el caso a seguridad con la fecha y la hora en que notaste la actividad extraña.",
+    "categoria": "seguridad"
+  },
+  {
+    "id": "F14",
+    "pregunta": "¿Puedo instalar programas por mi cuenta en mi laptop?",
+    "respuesta": "No. Solo se instala software del catálogo aprobado. Si necesitas algo que no está, abre un ticket de solicitud de software con la justificación y espera la evaluación de seguridad.",
+    "categoria": "software"
+  },
+  {
+    "id": "F15",
+    "pregunta": "Un programa se cierra solo al abrirlo",
+    "respuesta": "Reinicia el equipo y vuelve a intentarlo. Si continúa, anota el mensaje de error, la versión del programa y abre un ticket de software.",
+    "categoria": "software"
+  },
+  {
+    "id": "F16",
+    "pregunta": "La aplicación de nómina muestra un error 500 al generar reportes",
+    "respuesta": "Es un error del servidor. Intenta de nuevo en unos minutos y, si persiste, abre un ticket indicando el reporte y la hora; el equipo de aplicaciones revisa los registros.",
+    "categoria": "software"
+  },
+  {
+    "id": "F17",
+    "pregunta": "¿Cada cuánto se hacen respaldos de mis archivos del servidor?",
+    "respuesta": "Se hace un respaldo completo cada noche a las 02:00 y los respaldos se conservan durante 30 días. Para recuperar un archivo, abre un ticket con la ruta y la fecha que necesitas.",
+    "categoria": "respaldos"
+  },
+  {
+    "id": "F18",
+    "pregunta": "Borré un archivo por error, ¿se puede recuperar?",
+    "respuesta": "Si estaba en una carpeta de servidor, puede restaurarse desde el respaldo de los últimos 30 días. Abre un ticket con la ruta exacta y la fecha aproximada.",
+    "categoria": "respaldos"
+  },
+  {
+    "id": "F19",
+    "pregunta": "La impresora del segundo piso atasca el papel",
+    "respuesta": "Apaga la impresora, retira con cuidado el papel atascado y revisa que la bandeja esté bien cargada. Si se repite, abre un ticket de hardware con el modelo y la ubicación.",
+    "categoria": "hardware"
+  },
+  {
+    "id": "F20",
+    "pregunta": "Mi laptop no enciende aunque está conectada al cargador",
+    "respuesta": "Prueba con otro cargador y mantén presionado el botón de encendido 15 segundos. Si sigue sin encender, abre un ticket de hardware para revisión o reemplazo.",
+    "categoria": "hardware"
+  },
+  {
+    "id": "F21",
+    "pregunta": "El disco de mi computadora está casi lleno",
+    "respuesta": "Elimina archivos temporales y mueve documentos grandes a tu carpeta de red. Si necesitas más espacio, solicita una ampliación con un ticket de hardware.",
+    "categoria": "hardware"
+  },
+  {
+    "id": "F22",
+    "pregunta": "¿Cuál es el horario de la mesa de ayuda?",
+    "respuesta": "La mesa de ayuda atiende de lunes a viernes de 7:00 a 19:00. Fuera de ese horario solo se atienden incidentes críticos a través de la guardia.",
+    "categoria": "general"
+  },
+  {
+    "id": "F23",
+    "pregunta": "¿En cuánto tiempo me responden un ticket?",
+    "respuesta": "Los tickets críticos se atienden en 1 hora, los de prioridad alta en 4 horas y los normales en 1 día hábil.",
+    "categoria": "general"
+  },
+  {
+    "id": "F24",
+    "pregunta": "¿Dónde puedo pedir una recomendación de silla ergonómica?",
+    "respuesta": "Eso no es un servicio de TI. Consulta con recursos humanos o con el área de salud ocupacional.",
+    "categoria": "general"
+  }
+]

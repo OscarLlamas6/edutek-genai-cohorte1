@@ -1,0 +1,25 @@
+[project]
+name = "s04-embeddings-bases-vectoriales"
+version = "0.1.0"
+description = "Sesión 4 · Embeddings y bases de datos vectoriales (Neon y Pinecone)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=2.0",
+    "matplotlib>=3.9",
+    "openai>=1.0",
+    "psycopg[binary]>=3.2",
+    "pgvector>=0.3",
+    "pinecone>=7.0",
+    "python-dotenv>=1.0",
+]
+
+[dependency-groups]
+dev = [
+    "jupyterlab>=4.2",
+    "ipykernel>=6.29",
+    "ipywidgets>=8.1",
+]
+
+[tool.uv]
+package = false

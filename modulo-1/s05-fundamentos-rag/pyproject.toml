@@ -1,0 +1,27 @@
+[project]
+name = "s05-fundamentos-rag"
+version = "0.1.0"
+description = "Sesión 5 · Fundamentos de RAG y un RAG simple con citas"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "anthropic>=1.0",
+    "jinja2>=3.1",
+    "numpy>=2.0",
+    "openai>=1.0",
+    "psycopg[binary]>=3.2",
+    "pgvector>=0.3",
+    "pinecone>=7.0",
+    "pydantic>=2.8",
+    "python-dotenv>=1.0",
+]
+
+[dependency-groups]
+dev = [
+    "jupyterlab>=4.2",
+    "ipykernel>=6.29",
+    "ipywidgets>=8.1",
+]
+
+[tool.uv]
+package = false

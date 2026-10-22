@@ -60,6 +60,17 @@ En nuestro cliente el razonamiento se controla con `esfuerzo` = `"minimo"`, `"ba
 
 Los dos proveedores son de **pago por uso**. Los precios de referencia (octubre de 2026) están en `docs/COSTOS.md` y en la tabla `PRECIOS` de `cliente_llm.py`. Los dos modelos económicos cuestan lo mismo, así que las estimaciones 💰 FYI de los notebooks valen para ambos. **Configura un límite de gasto** en la consola de tu proveedor.
 
+## Embeddings (Sesiones 4 y 5)
+
+Los embeddings se eligen **aparte** del LLM, con `EMBEDDINGS_PROVIDER`:
+
+| Valor | Qué usa | Costo |
+| --- | --- | --- |
+| `local` (por defecto) | `nomic-embed-text-v2-moe` en LM Studio (multilingüe) | Gratis |
+| `openai` | `text-embedding-3-small` | ≈ US$ 0.02 por millón de tokens |
+
+**Anthropic no ofrece un modelo de embeddings propio**: con `LLM_PROVIDER=anthropic` usas embeddings locales u OpenAI. Los vectores de modelos distintos no se pueden mezclar: si cambias de modelo, reindexa todo. En la Sesión 5, `RAG_PROVIDER` (`anthropic`, `openai` o `local`) elige quién redacta las respuestas.
+
 ## Otros proveedores: Gemini, Groq, OpenRouter, Mistral…
 
 Muchos servicios aceptan el **formato de la API de OpenAI**. Con el proveedor `openai` normalmente basta cambiar la URL base, la llave y el modelo:

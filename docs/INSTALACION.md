@@ -331,3 +331,12 @@ Debe imprimir algo como `Python 3.12.x · anthropic 1.x`. Para verificar tu API 
 | `El modelo '...' no aparece en el servidor local` | El identificador no coincide con el de LM Studio | Copia el identificador exacto que muestra LM Studio en `LOCAL_LLM_MODEL` |
 | Descarga lenta/fallida de Python o paquetes | Proxy o firewall corporativo | Configura `HTTPS_PROXY`, o trabaja en un equipo personal |
 | En WSL2, todo va muy lento | El proyecto está en `/mnt/c/...` | Muévelo al sistema de archivos de WSL (`~/`) |
+
+## 12. Cuentas de la Semana 2 (Neon y Pinecone)
+
+Las sesiones de bases de datos vectoriales usan dos servicios con **plan gratuito**. Crea las cuentas siguiendo las guías (≈ 10 minutos cada una):
+
+- [`CUENTA_NEON.md`](CUENTA_NEON.md): PostgreSQL en la nube con pgvector.
+- [`CUENTA_PINECONE.md`](CUENTA_PINECONE.md): base de datos vectorial administrada.
+
+También necesitas el **modelo de embeddings** en LM Studio (ver [`LMSTUDIO.md`](LMSTUDIO.md#2b-descargar-un-modelo-de-embeddings-sesiones-4-a-6)). Si no logras crear una cuenta, puedes seguir las sesiones con el almacén en memoria.

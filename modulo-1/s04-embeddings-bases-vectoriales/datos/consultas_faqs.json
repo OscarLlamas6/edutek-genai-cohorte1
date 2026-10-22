@@ -1,0 +1,42 @@
+[
+  {
+    "consulta": "Se me olvidó la clave de mi usuario del dominio",
+    "esperada": "F01"
+  },
+  {
+    "consulta": "No logro entrar porque me bloqueó el sistema por equivocarme muchas veces",
+    "esperada": "F03"
+  },
+  {
+    "consulta": "Necesito trabajar desde casa y conectarme a la red de la empresa",
+    "esperada": "F04"
+  },
+  {
+    "consulta": "Aparece que el sitio web de la intranet no es seguro, el candado está roto",
+    "esperada": "F11"
+  },
+  {
+    "consulta": "Recibí un mensaje que pide mis credenciales y parece falso",
+    "esperada": "F12"
+  },
+  {
+    "consulta": "Quiero ver el código fuente de un proyecto pero no tengo permiso",
+    "esperada": "F09"
+  },
+  {
+    "consulta": "Se eliminó un documento importante de la carpeta del equipo y lo necesito de vuelta",
+    "esperada": "F18"
+  },
+  {
+    "consulta": "La pantalla negra de mi computadora portátil no da señal aunque está enchufada",
+    "esperada": "F20"
+  },
+  {
+    "consulta": "¿Hasta qué hora puedo llamar a soporte?",
+    "esperada": "F22"
+  },
+  {
+    "consulta": "Mi lector de planillas de pago da error de servidor",
+    "esperada": "F16"
+  }
+]

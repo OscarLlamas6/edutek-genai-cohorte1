@@ -4,7 +4,7 @@ Código, notebooks y prácticas del programa **AI Engineer** de Edutek (Guatemal
 
 | Módulo | Curso | Estado |
 | --- | --- | --- |
-| [`modulo-1/`](modulo-1/) | AI Engineer I · Fundamentos de IA Generativa | En curso: Semana 1 disponible |
+| [`modulo-1/`](modulo-1/) | AI Engineer I · Fundamentos de IA Generativa | En curso: Semanas 1 y 2 disponibles |
 | [`modulo-2/`](modulo-2/) | AI Engineer II · Arquitectura y Seguridad de Sistemas Agénticos | Próximamente |
 | [`modulo-3/`](modulo-3/) | AI Engineer III · LLMOps en Producción | Próximamente |
 
@@ -22,6 +22,8 @@ edutek-genai-cohorte1/
 │   ├── INSTALACION.md       ← instalar uv (o usar tu gestor), Git, LM Studio y tu API key
 │   ├── LMSTUDIO.md          ← configurar LM Studio (modelo local) paso a paso
 │   ├── COSTOS.md            ← qué consume dinero, cuánto y cómo protegerte
+│   ├── CUENTA_NEON.md       ← crear tu cuenta de Neon (PostgreSQL + pgvector), paso a paso
+│   ├── CUENTA_PINECONE.md   ← crear tu cuenta de Pinecone (base vectorial), paso a paso
 │   └── PROVEEDORES.md       ← elegir Anthropic u OpenAI (y adaptar otros)
 └── modulo-1/
     ├── README.md            ← índice del módulo y estado de las sesiones
@@ -66,7 +68,7 @@ Este curso usa una **API key de Anthropic o de OpenAI** (a tu elección: el repo
 - Cada README de sesión incluye una **tabla de costos** con lo que se gasta y una estimación.
 - Cada celda de un notebook que **llama a la API de pago** está marcada con 💰 **FYI** en su primera línea (con una estimación de costo).
 - Cada notebook tiene un **interruptor** (`EJECUTAR_LLAMADAS_DE_PAGO`) para apagar todo el gasto.
-- Las sesiones 1 a 3 suman, en conjunto, **menos de US$ 0.05** de consumo. La estimación del resto del curso se publicará sesión a sesión.
+- Las sesiones 1 a 3 suman, en conjunto, **menos de US$ 0.05** de consumo. Las sesiones 4 y 5 (embeddings, bases vectoriales y RAG) usan embeddings locales y los **planes gratuitos** de Neon y Pinecone (sin tarjeta o sin cobro), y menos de US$ 0.02 de LLM si usas un proveedor. La estimación del resto del curso se publicará sesión a sesión.
 
 Detalles y recomendaciones en [`docs/COSTOS.md`](docs/COSTOS.md); te sugerimos configurar un límite de gasto mensual en tu cuenta.
 
