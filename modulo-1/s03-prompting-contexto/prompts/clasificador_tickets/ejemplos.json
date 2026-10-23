@@ -1,5 +1,20 @@
 [
-  {"texto": "Se cayó el sistema de facturación y nadie puede emitir facturas desde hace una hora.", "categoria": "software", "prioridad": "critica", "resumen": "Caída total del sistema de facturación"},
-  {"texto": "Me pueden dar acceso a la carpeta compartida de Mercadeo? Mi jefa ya lo aprobó.", "categoria": "accesos", "prioridad": "baja", "resumen": "Solicitud de acceso a carpeta de Mercadeo"},
-  {"texto": "El cable de red de mi escritorio está roto y no tengo conexión.", "categoria": "hardware", "prioridad": "media", "resumen": "Cable de red dañado sin conexión"}
+  {
+    "texto": "Se cayó el sistema de facturación y nadie puede emitir facturas desde hace una hora.",
+    "categoria": "software",
+    "prioridad": "critica",
+    "resumen": "Caída total del sistema de facturación"
+  },
+  {
+    "texto": "Me pueden dar acceso a la carpeta compartida de Mercadeo? Mi jefa ya lo aprobó.",
+    "categoria": "accesos",
+    "prioridad": "baja",
+    "resumen": "Solicitud de acceso a carpeta de Mercadeo"
+  },
+  {
+    "texto": "El cable de red de mi escritorio está roto y no tengo conexión.",
+    "categoria": "hardware",
+    "prioridad": "media",
+    "resumen": "Cable de red dañado sin conexión"
+  }
 ]

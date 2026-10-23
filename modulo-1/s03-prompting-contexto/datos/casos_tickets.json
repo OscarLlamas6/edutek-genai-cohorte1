@@ -1,12 +1,63 @@
 [
-  {"id": "C-01", "texto": "No puedo conectarme a la VPN desde casa desde esta mañana, me dice credenciales inválidas aunque no cambié mi contraseña.", "esperada": "accesos"},
-  {"id": "C-02", "texto": "El switch del piso 3 reinicia cada pocos minutos y la gente de contabilidad se queda sin red.", "esperada": "red"},
-  {"id": "C-03", "texto": "La aplicación de nómina muestra un error 500 cuando intento generar el reporte quincenal.", "esperada": "software"},
-  {"id": "C-04", "texto": "El disco del servidor de archivos está al 98% y los usuarios ya no pueden guardar documentos.", "esperada": "hardware"},
-  {"id": "C-05", "texto": "Necesito acceso de solo lectura al repositorio de contratos para auditoría, aprobado por mi jefatura.", "esperada": "accesos"},
-  {"id": "C-06", "texto": "¿Pueden recomendarme una silla ergonómica para la oficina?", "esperada": "otro"},
-  {"id": "C-07", "texto": "El correo no abre desde esta mañana y creo que es culpa de la VPN.", "esperada": "software", "aceptables": ["software", "accesos", "red"], "nota": "Ambiguo a propósito: el usuario mezcla síntoma y causa."},
-  {"id": "C-08", "texto": "Mi laptop no enciende; la pantalla sigue negra aunque el cargador está conectado.", "esperada": "hardware"},
-  {"id": "C-09", "texto": "No puedo entrar al Wi-Fi corporativo, dice contraseña incorrecta.", "esperada": "red", "aceptables": ["red", "accesos"], "nota": "Ambiguo a propósito: red o credenciales."},
-  {"id": "C-10", "texto": "Quiero instalar Photoshop en mi equipo para preparar material de mercadeo.", "esperada": "software"}
+  {
+    "id": "C-01",
+    "texto": "No puedo conectarme a la VPN desde casa desde esta mañana, me dice credenciales inválidas aunque no cambié mi contraseña.",
+    "esperada": "accesos"
+  },
+  {
+    "id": "C-02",
+    "texto": "El switch del piso 3 reinicia cada pocos minutos y la gente de contabilidad se queda sin red.",
+    "esperada": "red"
+  },
+  {
+    "id": "C-03",
+    "texto": "La aplicación de nómina muestra un error 500 cuando intento generar el reporte quincenal.",
+    "esperada": "software"
+  },
+  {
+    "id": "C-04",
+    "texto": "El disco del servidor de archivos está al 98% y los usuarios ya no pueden guardar documentos.",
+    "esperada": "hardware"
+  },
+  {
+    "id": "C-05",
+    "texto": "Necesito acceso de solo lectura al repositorio de contratos para auditoría, aprobado por mi jefatura.",
+    "esperada": "accesos"
+  },
+  {
+    "id": "C-06",
+    "texto": "¿Pueden recomendarme una silla ergonómica para la oficina?",
+    "esperada": "otro"
+  },
+  {
+    "id": "C-07",
+    "texto": "El correo no abre desde esta mañana y creo que es culpa de la VPN.",
+    "esperada": "software",
+    "aceptables": [
+      "software",
+      "accesos",
+      "red"
+    ],
+    "nota": "Ambiguo a propósito: el usuario mezcla síntoma y causa."
+  },
+  {
+    "id": "C-08",
+    "texto": "Mi laptop no enciende; la pantalla sigue negra aunque el cargador está conectado.",
+    "esperada": "hardware"
+  },
+  {
+    "id": "C-09",
+    "texto": "No puedo entrar al Wi-Fi corporativo, dice contraseña incorrecta.",
+    "esperada": "red",
+    "aceptables": [
+      "red",
+      "accesos"
+    ],
+    "nota": "Ambiguo a propósito: red o credenciales."
+  },
+  {
+    "id": "C-10",
+    "texto": "Quiero instalar Photoshop en mi equipo para preparar material de mercadeo.",
+    "esperada": "software"
+  }
 ]
