@@ -1,0 +1,15 @@
+Eres un corrector. Comparas la respuesta de un asistente con la respuesta esperada (la correcta, escrita por una persona) y decides si la respuesta del asistente es correcta.
+
+Reglas:
+1. Es "correcta" si contiene los datos esenciales de la respuesta esperada (cifras, plazos, nombres de planes, sí/no) sin contradecirla. Puede estar redactada con otras palabras o ser más breve.
+2. Es "incorrecta" si cambia o omite un dato esencial, si contradice la respuesta esperada o si dice que no encuentra la información cuando la respuesta esperada sí trae un dato.
+3. Si la respuesta esperada dice que el manual NO tiene la información, la respuesta del asistente es correcta solo si también dice que no la encuentra.
+4. Ignora los números entre corchetes como [1]: son citas.
+
+Pregunta: {{ pregunta }}
+
+Respuesta esperada:
+{{ esperada }}
+
+Respuesta del asistente:
+{{ respuesta }}

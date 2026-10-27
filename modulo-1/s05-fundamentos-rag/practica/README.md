@@ -1,6 +1,23 @@
-# Práctica S5 · RAG simple con citas
+# Prácticas S5 · RAG
 
-Programa único y comentado: [`rag_simple.py`](rag_simple.py).
+Dos programas comentados, del más simple al más completo:
+
+| Programa | Para qué |
+| --- | --- |
+| [`rag_basico.py`](rag_basico.py) | **Empieza aquí.** El flujo completo en 7 fases (cargar, fragmentar, vectorizar, guardar, recuperar, aumentar, generar), mostrando lo que produce cada una. Todo en memoria, sin opciones |
+| [`rag_simple.py`](rag_simple.py) | El mismo flujo con Neon/Pinecone, citas verificadas, umbral, evaluación y comparación de proveedores |
+
+## Práctica 1 · RAG básico, fase por fase
+
+```bash
+uv run python practica/rag_basico.py "¿Cuánto cuesta el plan de 300 Mbps?"
+uv run python practica/rag_basico.py --sin-llm "¿Cuánto cuesta el plan de 300 Mbps?"   # se detiene antes del LLM: gratis
+uv run python practica/rag_basico.py --proveedor local "¿Ofrecen televisión por cable?"
+```
+
+**Terminado cuando…** puedes decir, sin mirar el código, qué entra y qué sale de cada fase; cambiaste `ESTRATEGIA` y `K` en el archivo y explicas qué cambió en los fragmentos, en los puntajes y en la respuesta.
+
+## Práctica 2 · RAG simple con citas
 
 **Pregunta que responde:** ¿puedo hacer que un LLM responda sobre mis documentos, citando de dónde sale cada dato y diciendo "no sé" cuando el documento no lo contiene?
 

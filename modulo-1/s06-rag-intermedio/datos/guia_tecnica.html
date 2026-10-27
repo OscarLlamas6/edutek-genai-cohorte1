@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Guía de diagnóstico técnico · Andes Fibra</title>
+  <meta name="description" content="Material ficticio creado para el curso.">
+  <style>body { font-family: sans-serif; } nav a { margin-right: 1em; }</style>
+  <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}</script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Inicio</a> <a href="/planes">Planes</a> <a href="/soporte">Soporte</a> <a href="/agencias">Agencias</a>
+      <a href="/mi-andes">Mi Andes</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Guía de diagnóstico técnico</h1>
+    <p>Esta guía es material ficticio creado para el curso. Reúne los códigos de error, las luces y los equipos de Andes Fibra, un proveedor imaginario de internet por fibra óptica. Todas las cifras son inventadas.</p>
+
+    <h2>Códigos de error del router</h2>
+    <p>Cuando el router detecta un problema, muestra un código en la pantalla de estado del portal del equipo. Estos son los más frecuentes.</p>
+    <ul>
+      <li><strong>E-101</strong>: sin portadora. El cable de fibra o el conector del módem óptico está suelto o dañado. Revise el conector y repórtelo si la luz LOS está en rojo.</li>
+      <li><strong>E-204</strong>: falla de autenticación PPPoE. El router no logra iniciar sesión con la red de Andes Fibra. Reinicie el equipo; si el código vuelve, el técnico debe reprovisionar el equipo desde la central.</li>
+      <li><strong>E-217</strong>: conflicto de dirección IP en la red local. Dos dispositivos de la casa tienen la misma dirección IP. Apague el dispositivo con IP fija manual o configúrelo en DHCP para que el router le asigne una dirección libre.</li>
+      <li><strong>E-305</strong>: temperatura alta. El equipo se está sobrecalentando. Colóquelo en un lugar ventilado, lejos de la luz solar y de otros aparatos que den calor.</li>
+      <li><strong>E-410</strong>: firmware desactualizado. El equipo se actualiza solo de madrugada; si el código persiste más de 48 horas, se debe solicitar una visita técnica.</li>
+    </ul>
+
+    <h2>Qué significan las luces del módem óptico</h2>
+    <p>Además de la luz LOS, el módem óptico tiene otras dos luces de diagnóstico. La luz PON parpadeando indica que el módem está buscando la OLT, que es el equipo de la central al que se conecta. Si la luz PON parpadea más de cinco minutos, hay un problema de enlace y se debe reportar. La luz PON verde fija indica que el enlace con la central está establecido.</p>
+    <p>La luz LAN se enciende en verde por cada cable de red conectado al router. Si un cable está conectado y su luz LAN no enciende, pruebe con otro cable o con otro puerto.</p>
+
+    <h2>Catálogo de alarmas del módem óptico</h2>
+    <p>El módem óptico registra alarmas con un código de la serie OPT. El técnico las consulta desde la central o con el equipo en sitio. Cada alarma indica el componente afectado.</p>
+    <ul>
+      <li><strong>OPT-1101</strong>: potencia óptica de recepción baja en el puerto PON. Revisar el conector y la limpieza de la fibra.</li>
+      <li><strong>OPT-1102</strong>: potencia óptica de recepción alta en el puerto PON. Revisar el atenuador del tramo final.</li>
+      <li><strong>OPT-1103</strong>: potencia óptica de transmisión baja en el puerto PON. Reemplazar el módem óptico.</li>
+      <li><strong>OPT-1104</strong>: temperatura del láser alta. Mejorar la ventilación del equipo.</li>
+      <li><strong>OPT-1105</strong>: corriente de polarización del láser fuera de rango. Reemplazar el módem óptico.</li>
+      <li><strong>OPT-1106</strong>: voltaje de alimentación bajo. Revisar el adaptador de corriente.</li>
+      <li><strong>OPT-1107</strong>: voltaje de alimentación alto. Revisar el adaptador de corriente y el regulador de voltaje de la casa.</li>
+      <li><strong>OPT-1108</strong>: pérdida de sincronización con la OLT. Reiniciar el módem óptico.</li>
+      <li><strong>OPT-1109</strong>: tasa de errores de bits excedida en el enlace PON. Revisar curvas cerradas en la fibra.</li>
+      <li><strong>OPT-1110</strong>: firmware inconsistente tras una actualización. Reprovisionar el equipo desde la central.</li>
+      <li><strong>OPT-1111</strong>: memoria de configuración dañada. Reemplazar el módem óptico.</li>
+      <li><strong>OPT-1112</strong>: sensor de temperatura ambiente fuera de rango. Reemplazar el módem óptico.</li>
+    </ul>
+
+    <h2>Modelos de equipo</h2>
+    <p>Andes Fibra instala dos modelos de router según el plan contratado.</p>
+    <p>El AX-2200 es un router wifi 5 con cuatro puertos de red de 1 Gbps. Se instala con los planes Básico y Familiar. Por wifi alcanza como máximo unos 300 Mbps reales.</p>
+    <p>El AX-3000 es un router wifi 6 con cuatro puertos de 1 Gbps y un puerto de 2,5 Gbps. Se instala con los planes Gamer y Negocio. Soporta todo el ancho de banda del plan Gamer por wifi cerca del equipo.</p>
+
+    <h2>Restablecer el router de fábrica</h2>
+    <p>Para dejar el router como salió de fábrica, mantenga pulsado el botón RESET durante 10 segundos con un clip, hasta que todas las luces parpadeen. Esto borra el nombre y la clave del wifi y la configuración del administrador. La contraseña de administrador por defecto está impresa en la etiqueta que trae el equipo en la parte inferior.</p>
+
+    <h2>Cambiar el nombre y la clave del wifi</h2>
+    <p>Conecte un dispositivo al router y abra el navegador en la dirección 192.168.1.1. Ingrese con el usuario admin y la contraseña de la etiqueta. En el menú Wifi puede cambiar el nombre de la red y la clave de cada banda. Se recomienda usar una clave de al menos 12 caracteres.</p>
+
+    <h2>Abrir puertos y alojar un servidor en casa</h2>
+    <p>Los planes residenciales usan CGNAT: muchos clientes comparten una misma dirección IP pública, por lo que no es posible abrir puertos ni alojar servidores accesibles desde internet. Quien necesite abrir puertos debe contratar el plan Negocio, que incluye una dirección IP fija pública. Como alternativa en un plan residencial, se puede usar una VPN o un túnel inverso que no requiera abrir puertos.</p>
+
+    <h2>Cómo medir la velocidad correctamente</h2>
+    <p>Conecte el computador al router con un cable de red, cierre los demás programas y apague el wifi del computador. Abra la prueba de velocidad en velocidad.andesfibra.example. Con cable, una medición sana alcanza entre el 90 % y el 95 % de la velocidad contratada. Medir por wifi mezcla la velocidad de la fibra con la del aire, y no sirve para reclamar.</p>
+  </main>
+
+  <footer>
+    <p>© 2026 Andes Fibra (empresa imaginaria). Términos y condiciones. Política de cookies. Síguenos en redes sociales.</p>
+  </footer>
+</body>
+</html>

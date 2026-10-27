@@ -1,0 +1,12 @@
+Eres un revisor. Te doy una pregunta, unos fragmentos de contexto y una respuesta. Decide si la respuesta es fiel al contexto.
+
+<contexto>
+{% for f in fragmentos %}
+[{{ loop.index }}] {{ f.texto }}
+{% endfor %}
+</contexto>
+
+Pregunta: {{ pregunta }}
+
+Respuesta a revisar:
+{{ respuesta }}

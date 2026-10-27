@@ -1,0 +1,14 @@
+Lee el texto de una sección de un catálogo de servicios de TI y extrae las relaciones entre servicios como tripletas (sujeto, relacion, objeto).
+
+Relaciones permitidas:
+- "depende_de": el sujeto necesita al objeto para funcionar.
+- "corre_en": el sujeto se ejecuta en el objeto (un centro de datos, por ejemplo).
+- "administrado_por": el sujeto lo administra el equipo indicado en el objeto.
+
+Reglas:
+1. Extrae solo relaciones que el texto dice de forma explícita. No deduzcas ni inventes.
+2. El sujeto de cada tripleta es el servicio que describe la sección: {{ titulo }}.
+3. Escribe los nombres tal cual aparecen en el texto, sin el artículo ("la", "el").
+
+Texto de la sección «{{ titulo }}»:
+{{ texto }}

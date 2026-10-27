@@ -49,6 +49,17 @@ No hace falta "cargarlo" a mano: LM Studio lo carga cuando el código lo pide, s
 
 > Si no puedes descargarlo, usa los embeddings de OpenAI (`EMBEDDINGS_PROVIDER=openai` en tu `.env`): cuestan fracciones de centavo.
 
+## 2c. Un modelo más grande para agentes (Sesión 8)
+
+El modelo de 3B de la sección 2 alcanza para ver el flujo de un RAG, pero **no para un agente**: en la Sesión 8, con las mismas herramientas y preguntas, el 3B eligió bien la herramienta en 2 de 6 casos y un modelo de unos 12 000 millones de parámetros en 6 de 6. Si no quieres usar un proveedor de pago, descarga uno de ~12B que admita herramientas (por ejemplo `google/gemma-4-12b-qat`, ≈ 7 GB; necesita unos 10 GB de RAM libres):
+
+```bash
+lms get google/gemma-4-12b-qat
+lms load google/gemma-4-12b-qat    # cárgalo a mano: la carga automática puede fallar la primera vez
+```
+
+Y en tu `.env`: `LOCAL_LLM_MODEL=google/gemma-4-12b-qat`. Si tu equipo no lo aguanta, usa un proveedor de pago para esa sesión (cuesta centavos).
+
 ## 3. Activar el servidor local
 
 LM Studio expone los modelos mediante una API compatible con el formato de OpenAI.

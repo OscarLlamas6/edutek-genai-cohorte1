@@ -15,15 +15,17 @@ Cada sesión es un **proyecto independiente** (su propio entorno, su propia vers
 | 1 | [S3](s03-prompting-contexto/) | Prompting y context engineering | 3.12 | ✅ | Disponible |
 | 2 | [S4](s04-embeddings-bases-vectoriales/) | Embeddings y bases de datos vectoriales (Neon y Pinecone) | 3.12 | ✅ | Disponible |
 | 2 | [S5](s05-fundamentos-rag/) | Fundamentos de RAG y un RAG simple con citas | 3.12 | ✅ | Disponible |
-| 3 | S7 | RAG en profundidad: chunking y recuperación | — | — | Próximamente |
-| 3 | S8 | RAG: evaluación y alucinaciones | — | — | Próximamente |
-| 3 | S9 | Tool calling / function calling | — | — | Próximamente |
-| 4 | S10 | Introducción a agentes | — | — | Próximamente |
-| 4 | S11 | Memoria y estado en agentes | — | — | Próximamente |
-| 4 | S12 | MCP: fundamentos | — | — | Próximamente |
-| 5 | S13 | Construyendo con MCP | — | — | Próximamente |
-| 5 | S14 | Automatización con n8n | — | — | Próximamente |
-| 5 | S15 | Agente con RAG + MCP | — | — | Próximamente |
+| 3 | [S6](s06-rag-intermedio/) | RAG intermedio: ingesta, chunking, búsqueda híbrida, filtros, reranking y reescritura | 3.12 | ✅ | Disponible |
+| 3 | [S7](s07-rag-avanzado/) | RAG avanzado: técnicas, GraphRAG, evaluación y alucinaciones | 3.12 | ✅ | Disponible |
+| 3 | [S8](s08-agentes-langchain/) | Fundamentos de un agente de IA con LangChain (tool calling) | 3.12 | ✅ | Disponible |
+| 4 | S9 | Introducción a agentes | — | — | Próximamente |
+| 4 | S10 | Memoria y estado en agentes | — | — | Próximamente |
+| 4 | S11 | MCP: fundamentos | — | — | Próximamente |
+| 5 | S12 | Construyendo con MCP | — | — | Próximamente |
+| 5 | S13 | Automatización con n8n | — | — | Próximamente |
+| 5 | S14 | Agente con RAG + MCP | — | — | Próximamente |
+
+> **Numeración.** Desde la Semana 3 la numeración de las carpetas va **una unidad por debajo** de la del programa (la S7 del programa es la carpeta `s06-…`, y así hasta la S15 del programa, que es la `s14-…`), porque las sesiones de embeddings y RAG simple se fusionaron en la Semana 2.
 
 ## Cómo trabajar una sesión
 

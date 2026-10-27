@@ -1,0 +1,59 @@
+{
+  "organizacion": "Andes Fibra (empresa ficticia)",
+  "consultado": "2026-10-29T18:40:00-06:00",
+  "servicios": [
+    {
+      "id": "portal-mi-andes",
+      "nombre": "Portal Mi Andes",
+      "estado": "operativo",
+      "detalle": "Sin incidentes.",
+      "actualizado": "2026-10-29T18:35:00-06:00"
+    },
+    {
+      "id": "app-movil",
+      "nombre": "App móvil Mi Andes",
+      "estado": "degradado",
+      "detalle": "El inicio de sesión tarda entre 6 y 8 segundos. Los pagos y las consultas funcionan con normalidad.",
+      "actualizado": "2026-10-29T18:20:00-06:00",
+      "estimado_resolucion": "2026-10-29T20:00:00-06:00"
+    },
+    {
+      "id": "pagos-en-linea",
+      "nombre": "Pagos en línea",
+      "estado": "caido",
+      "detalle": "Los pagos con tarjeta son rechazados por una falla del procesador externo. Las transferencias bancarias y el pago en agencias siguen disponibles.",
+      "actualizado": "2026-10-29T17:55:00-06:00",
+      "estimado_resolucion": "2026-10-29T21:00:00-06:00"
+    },
+    {
+      "id": "chat-soporte",
+      "nombre": "Chat de soporte",
+      "estado": "operativo",
+      "detalle": "Sin incidentes.",
+      "actualizado": "2026-10-29T18:30:00-06:00"
+    },
+    {
+      "id": "telefonia-soporte",
+      "nombre": "Línea telefónica de soporte",
+      "estado": "mantenimiento",
+      "detalle": "Mantenimiento programado de la central telefónica. Mientras tanto, el soporte se atiende solo por el chat del portal.",
+      "actualizado": "2026-10-29T18:00:00-06:00",
+      "estimado_resolucion": "2026-10-29T22:00:00-06:00"
+    },
+    {
+      "id": "red-zona-norte",
+      "nombre": "Red de fibra · Zona Norte",
+      "estado": "operativo",
+      "detalle": "Sin incidentes.",
+      "actualizado": "2026-10-29T18:38:00-06:00"
+    },
+    {
+      "id": "red-zona-sur",
+      "nombre": "Red de fibra · Zona Sur",
+      "estado": "degradado",
+      "detalle": "Corte parcial de fibra en la avenida Central. Unos 340 clientes sin servicio; cuadrilla en el sitio.",
+      "actualizado": "2026-10-29T18:10:00-06:00",
+      "estimado_resolucion": "2026-10-29T22:00:00-06:00"
+    }
+  ]
+}

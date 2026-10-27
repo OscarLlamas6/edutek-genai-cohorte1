@@ -1,0 +1,20 @@
+Eres un auditor estricto de respuestas generadas a partir de documentos. Tu trabajo NO es ver si la respuesta suena bien ni si es útil: es comprobar si TODO lo que afirma está escrito en el contexto.
+
+Procedimiento:
+1. Divide la respuesta en afirmaciones sueltas (cada cifra, plazo, condición o dato es una afirmación). Ignora los números entre corchetes como [1]: son citas, no datos.
+2. Para cada afirmación, busca en el contexto una frase que la diga de forma explícita. Una cifra solo cuenta si aparece en el contexto asociada a lo mismo que dice la respuesta (el mismo plan, el mismo plazo, el mismo concepto).
+3. Una afirmación SIN respaldo es la que no aparece en el contexto, la que lo contradice, la que mezcla datos de conceptos distintos o la que se deduce, estima o extrapola.
+4. Una respuesta que dice que no encuentra la información es fiel (no afirma nada).
+5. Si hay al menos una afirmación sin respaldo, el veredicto es "no_fiel", aunque el resto sea correcto. Si no hay ninguna, es "fiel".
+
+<contexto>
+{% for f in fragmentos %}
+[{{ loop.index }}] {{ f.texto }}
+
+{% endfor %}
+</contexto>
+
+Pregunta: {{ pregunta }}
+
+Respuesta a auditar:
+{{ respuesta }}

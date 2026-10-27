@@ -1,0 +1,237 @@
+[
+  {
+    "id": "P01",
+    "pregunta": "¿Cuánto sale el plan de 300 Mbps?",
+    "clave": "39 dólares al mes",
+    "tipo": "semantica"
+  },
+  {
+    "id": "P02",
+    "pregunta": "Si me voy antes del año, ¿cuánto me cobran de multa?",
+    "clave": "15 dólares por cada mes que falte",
+    "tipo": "semantica"
+  },
+  {
+    "id": "P03",
+    "pregunta": "Se fue el internet por culpa de la empresa, ¿me compensan?",
+    "clave": "más de 6 horas continuas",
+    "tipo": "semantica"
+  },
+  {
+    "id": "P04",
+    "pregunta": "¿Pueden llevarme el servicio a otra casa?",
+    "clave": "30 dólares si hay cobertura",
+    "tipo": "semantica"
+  },
+  {
+    "id": "P05",
+    "pregunta": "El wifi no llega al cuarto del fondo, ¿qué banda me conviene?",
+    "clave": "2,4 GHz tiene más alcance",
+    "tipo": "semantica"
+  },
+  {
+    "id": "P06",
+    "pregunta": "¿Puedo montar un servidor en mi casa y que lo vean desde afuera?",
+    "clave": "CGNAT",
+    "tipo": "semantica"
+  },
+  {
+    "id": "P07",
+    "pregunta": "¿Cómo dejo el router como si fuera nuevo?",
+    "clave": "10 segundos",
+    "tipo": "semantica"
+  },
+  {
+    "id": "P08",
+    "pregunta": "¿Dónde cambio la contraseña de mi wifi?",
+    "clave": "192.168.1.1",
+    "tipo": "semantica"
+  },
+  {
+    "id": "P14",
+    "pregunta": "Terminó la ventana de mantenimiento y sigo sin internet, ¿qué hago?",
+    "clave": "30 minutos",
+    "tipo": "semantica"
+  },
+  {
+    "id": "P09",
+    "pregunta": "¿Qué significa el error E-217?",
+    "clave": "conflicto de dirección IP",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P10",
+    "pregunta": "¿Qué hago si sale E-204?",
+    "clave": "autenticación PPPoE",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P11",
+    "pregunta": "¿Qué tiene de especial el AX-3000?",
+    "clave": "puerto de 2,5 Gbps",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P12",
+    "pregunta": "¿Cuál es el 0800-26337?",
+    "clave": "0800-26337",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P13",
+    "pregunta": "La luz PON parpadea, ¿qué pasa?",
+    "clave": "buscando la OLT",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P24",
+    "pregunta": "¿Qué indica la alarma OPT-1107?",
+    "clave": "voltaje de alimentación alto",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P25",
+    "pregunta": "¿Qué indica la alarma OPT-1109?",
+    "clave": "tasa de errores de bits",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P26",
+    "pregunta": "¿Qué hago con la alarma OPT-1103?",
+    "clave": "potencia óptica de transmisión baja",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P27",
+    "pregunta": "¿Qué indica la alarma OPT-1105?",
+    "clave": "corriente de polarización",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P28",
+    "pregunta": "¿Qué indica la alarma OPT-1111?",
+    "clave": "memoria de configuración dañada",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P29",
+    "pregunta": "¿Qué indica la alarma OPT-1102?",
+    "clave": "recepción alta",
+    "tipo": "lexica"
+  },
+  {
+    "id": "P15",
+    "pregunta": "¿Qué día hacen el mantenimiento en la zona sur?",
+    "clave": "10 de noviembre",
+    "tipo": "tabla"
+  },
+  {
+    "id": "P16",
+    "pregunta": "¿Cuánto pagaría de penalización si cancelo en el mes 6 de un contrato residencial?",
+    "clave": "6 | 6 | 90",
+    "tipo": "tabla"
+  },
+  {
+    "id": "P17",
+    "pregunta": "¿En cuánto tiempo deben reparar una falla?",
+    "clave": "máximo de 4 horas",
+    "tipo": "filtro",
+    "filtro": {
+      "publico": "negocio"
+    }
+  },
+  {
+    "id": "P18",
+    "pregunta": "¿En cuánto tiempo deben reparar una falla?",
+    "clave": "máximo de 48 horas",
+    "tipo": "filtro",
+    "filtro": {
+      "publico": "residencial"
+    }
+  },
+  {
+    "id": "P19",
+    "pregunta": "¿Cuánto es la penalización por cancelar antes de tiempo?",
+    "clave": "25 dólares por cada mes restante",
+    "tipo": "filtro",
+    "filtro": {
+      "publico": "negocio"
+    }
+  },
+  {
+    "id": "P30",
+    "pregunta": "¿Cuánto dura el contrato?",
+    "clave": "dura 24 meses",
+    "tipo": "filtro",
+    "filtro": {
+      "publico": "negocio"
+    }
+  },
+  {
+    "id": "P20",
+    "pregunta": "¿Y los domingos?",
+    "clave": "9:00 a 18:00",
+    "tipo": "conversacional",
+    "historial": [
+      {
+        "rol": "cliente",
+        "texto": "¿A qué hora atienden por teléfono de lunes a sábado?"
+      },
+      {
+        "rol": "asistente",
+        "texto": "De 7:00 a 22:00."
+      }
+    ]
+  },
+  {
+    "id": "P21",
+    "pregunta": "¿Y trae IP fija?",
+    "clave": "Solo el plan Negocio incluye IP fija",
+    "tipo": "conversacional",
+    "historial": [
+      {
+        "rol": "cliente",
+        "texto": "¿Cuánto cuesta el plan Gamer?"
+      },
+      {
+        "rol": "asistente",
+        "texto": "Cuesta 55 dólares al mes."
+      }
+    ]
+  },
+  {
+    "id": "P22",
+    "pregunta": "¿Cómo lo soluciono?",
+    "clave": "configúrelo en DHCP",
+    "tipo": "conversacional",
+    "historial": [
+      {
+        "rol": "cliente",
+        "texto": "Me sale el error E-217 en el router."
+      },
+      {
+        "rol": "asistente",
+        "texto": "Ese código indica un problema en la red local."
+      }
+    ]
+  },
+  {
+    "id": "P23",
+    "pregunta": "¿Y si el plan es de Negocio?",
+    "clave": "4 horas",
+    "tipo": "conversacional",
+    "filtro": {
+      "publico": "negocio"
+    },
+    "historial": [
+      {
+        "rol": "cliente",
+        "texto": "¿En cuánto tiempo reparan una falla en un plan residencial?"
+      },
+      {
+        "rol": "asistente",
+        "texto": "En un máximo de 48 horas."
+      }
+    ]
+  }
+]

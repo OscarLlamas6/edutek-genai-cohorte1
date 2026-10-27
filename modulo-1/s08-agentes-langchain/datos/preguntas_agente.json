@@ -1,0 +1,68 @@
+[
+  {
+    "id": "q1",
+    "pregunta": "¿Cómo está la app móvil?",
+    "deben": [
+      "estado_servicio"
+    ],
+    "permitidas": [],
+    "nota": "Un servicio concreto: una consulta de estado."
+  },
+  {
+    "id": "q2",
+    "pregunta": "¿Hay algún servicio caído en este momento?",
+    "deben": [
+      "listar_servicios"
+    ],
+    "permitidas": [
+      "estado_servicio"
+    ],
+    "nota": "Pregunta general: hay que mirar todos los servicios."
+  },
+  {
+    "id": "q3",
+    "pregunta": "¿Hasta qué día puedo pagar mi factura sin recargo?",
+    "deben": [
+      "consultar_manual"
+    ],
+    "permitidas": [],
+    "nota": "Es una política: está en el manual, no en el estado de los servicios."
+  },
+  {
+    "id": "q4",
+    "pregunta": "¿Cuánto es el 15 % de 39?",
+    "deben": [],
+    "permitidas": [],
+    "nota": "No necesita ninguna herramienta: un buen agente también sabe cuándo NO usarlas."
+  },
+  {
+    "id": "q5",
+    "pregunta": "No puedo pagar con tarjeta, ¿qué hago?",
+    "deben": [
+      "estado_servicio"
+    ],
+    "permitidas": [
+      "consultar_manual",
+      "listar_servicios"
+    ],
+    "nota": "Dos herramientas posibles: primero revisar si pagos en línea está caído; el manual puede complementar."
+  },
+  {
+    "id": "q6",
+    "pregunta": "Buenas noches, ¿me puedes ayudar?",
+    "deben": [],
+    "permitidas": [],
+    "nota": "Un saludo no necesita herramientas."
+  },
+  {
+    "id": "q7",
+    "pregunta": "Abre un ticket: desde las 5 pm todos los pagos con tarjeta son rechazados.",
+    "deben": [
+      "reportar_falla"
+    ],
+    "permitidas": [
+      "estado_servicio"
+    ],
+    "nota": "Aquí SÍ se pide una acción que escribe. Se evalúa solo cuando el agente tiene esa herramienta."
+  }
+]

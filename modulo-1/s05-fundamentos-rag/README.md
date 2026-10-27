@@ -19,7 +19,7 @@
 | [`embeddings.py`](embeddings.py), [`almacenes.py`](almacenes.py) | Copia de la Sesión 4 (embeddings y almacenes memoria/Neon/Pinecone) |
 | [`cliente_llm.py`](cliente_llm.py), [`plantillas.py`](plantillas.py) | Copias de las Sesiones 2 y 3 (LLM y plantillas de prompt) |
 | `prompts/rag_respuesta/` | Plantillas `v1` y `v2` del prompt del RAG; `prompts/CHANGELOG.md` |
-| `practica/` | **RAG simple con citas**: programa completo y comentado |
+| `practica/` | **`rag_basico.py`** (las 7 fases del RAG, paso a paso) y **`rag_simple.py`** (RAG con citas, Neon/Pinecone y evaluación) |
 | `datos/` | Manual ficticio de "Andes Fibra" y 14 preguntas de evaluación (2 fuera de alcance) |
 | `pyproject.toml`, `uv.lock`, `.python-version` | Entorno de la sesión (**Python 3.12**) |
 

@@ -19,6 +19,8 @@ Queremos ser **100 % transparentes** contigo. Este documento dice qué cuesta di
 | **Neon** (PostgreSQL + pgvector), plan **Free** | US$ 0, **sin tarjeta**; cuota de 1 GB y 100 CU-horas por proyecto | Sesiones 4 y 5 |
 | **Pinecone**, plan **Starter** | US$ 0; cuota de 2 GB, 2 M unidades de escritura y 1 M de lectura al mes, 5 índices | Sesiones 4 y 5 |
 
+Las sesiones 6 a 8 no añaden servicios nuevos: usan los mismos embeddings locales y el mismo proveedor de LLM. LangChain (S8) es una biblioteca gratuita; su servicio de trazas (LangSmith) **no se usa** y queda apagado.
+
 Más adelante pueden aparecer otros servicios. **Se avisará de forma explícita en el README de cada sesión antes de usarlos.**
 
 ### Neon y Pinecone: cuotas, no dinero
@@ -56,7 +58,10 @@ Estimaciones calculadas con las llamadas del notebook y de las prácticas. Tu ga
 | S3 · Prompting y context engineering | ~50 | < US$ 0.01 | ~US$ 0.001 por evaluación de 10 casos |
 | S4 · Embeddings y bases vectoriales | 0 con embeddings locales | US$ 0 (con embeddings de OpenAI: < US$ 0.001) | US$ 0 (con OpenAI: fracciones de centavo) |
 | S5 · Fundamentos de RAG | ~25 al LLM (con modelo de proveedor); +14 por cada proveedor extra que compares | < US$ 0.02 (US$ 0 con `RAG_PROVIDER=local`) | ≈ US$ 0.0005 por pregunta |
-| S7 a S15 | _Se publicará en cada sesión_ | | |
+| S6 · RAG intermedio | ~30 al LLM en las partes 8 a 10 (con modelo de proveedor) | < US$ 0.02 (US$ 0 con modelo local) | US$ 0 (el laboratorio de chunking no llama al LLM) |
+| S7 · RAG avanzado y evaluación | descomposición, HyDE, generación y juez (con modelo de proveedor) | < US$ 0.15, cota superior (US$ 0 con modelo local) | ≈ US$ 0.0005 por pregunta evaluada; el juez suma otra llamada por pregunta |
+| S8 · Agentes con LangChain | un agente hace varias llamadas por pregunta | < US$ 0.03 (US$ 0 con modelo local) | ≈ US$ 0.0005 a 0.002 por pregunta |
+| S9 a S14 | _Se publicará en cada sesión_ | | |
 
 ## Cómo vas a reconocer lo que cuesta dinero
 
