@@ -1,21 +1,25 @@
 # Marco teórico · Sesión 6: RAG intermedio, chunking y recuperación
 
-> Documento de apoyo al notebook `s06_rag_intermedio.ipynb`. Reúne las definiciones y conceptos de la sesión. No contiene código: el código y los experimentos están en el notebook y en la práctica. Cada concepto sigue la misma estructura: **qué es, qué hace, para qué sirve, analogía de infraestructura, ejemplo a mano, cuándo no usarlo y errores típicos**.
+> Documento de apoyo al notebook `s06_rag_intermedio.ipynb`. Reúne las definiciones y conceptos de la sesión. No contiene código: el código y los experimentos están en el notebook y en la práctica. Las secciones sobre Docling (parsing con *layout*, OCR en la práctica y chunking híbrido) son **opcionales**: Docling no forma parte del entorno base de la sesión. Cada concepto sigue la misma estructura: **qué es, qué hace, para qué sirve, analogía de infraestructura, ejemplo a mano, cuándo no usarlo y errores típicos**.
 
 ## Índice
 
 1. [De un RAG simple a uno intermedio](#1-de-un-rag-simple-a-uno-intermedio)
 2. [Ingesta y parsing de documentos](#2-ingesta-y-parsing-de-documentos)
 3. [OCR](#3-ocr)
-4. [Fragmentación (chunking)](#4-fragmentación-chunking)
-5. [Búsqueda léxica: BM25](#5-búsqueda-léxica-bm25)
-6. [Búsqueda híbrida y fusión RRF](#6-búsqueda-híbrida-y-fusión-rrf)
-7. [Metadatos y filtros](#7-metadatos-y-filtros)
-8. [Reranking](#8-reranking)
-9. [Reescritura y expansión de la consulta](#9-reescritura-y-expansión-de-la-consulta)
-10. [Evaluar la recuperación](#10-evaluar-la-recuperación)
-11. [Glosario ampliado](#11-glosario-ampliado)
-12. [Preguntas de repaso con respuesta](#12-preguntas-de-repaso-con-respuesta)
+4. [Parsing moderno con análisis de layout](#4-parsing-moderno-con-análisis-de-layout)
+5. [OCR en la práctica](#5-ocr-en-la-práctica)
+6. [Cómo elegir un parser](#6-cómo-elegir-un-parser)
+7. [Fragmentación (chunking)](#7-fragmentación-chunking)
+8. [Chunking híbrido de Docling](#8-chunking-híbrido-de-docling)
+9. [Búsqueda léxica: BM25](#9-búsqueda-léxica-bm25)
+10. [Búsqueda híbrida y fusión RRF](#10-búsqueda-híbrida-y-fusión-rrf)
+11. [Metadatos y filtros](#11-metadatos-y-filtros)
+12. [Reranking](#12-reranking)
+13. [Reescritura y expansión de la consulta](#13-reescritura-y-expansión-de-la-consulta)
+14. [Evaluar la recuperación](#14-evaluar-la-recuperación)
+15. [Glosario ampliado](#15-glosario-ampliado)
+16. [Preguntas de repaso con respuesta](#16-preguntas-de-repaso-con-respuesta)
 
 ---
 
@@ -25,8 +29,11 @@ El RAG de la Sesión 5 hacía un solo recorrido: fragmentar un documento ordenad
 
 | Problema real | Pieza que lo ataca |
 | --- | --- |
-| Los documentos no son Markdown (Word, web, PDF) | Ingesta multiformato; OCR |
+| Los documentos no son Markdown (Word, web, PDF) | Ingesta multiformato |
+| Una tabla de un PDF se aplana, o las columnas se mezclan | Parser con análisis de *layout* (Docling) |
+| La página es una imagen (escaneo) | OCR (con sus errores) |
 | Los fragmentos cortan o diluyen las ideas | Estrategias de chunking |
+| Quieres fragmentos que respeten los encabezados, midan lo que admite el modelo de embeddings y se puedan citar con página | Chunking híbrido de Docling (jerarquía + tokens) |
 | La búsqueda por significado falla con identificadores exactos | Búsqueda léxica (BM25) e híbrida |
 | La respuesta depende de quién pregunta | Metadatos y filtros |
 | El fragmento correcto aparece en el puesto 5 y solo se envían 3 | Reranking |
@@ -68,12 +75,15 @@ Ideas centrales:
 
 **Analogía de infraestructura.** Un sistema de observabilidad: una búsqueda de texto libre (`grep`) encuentra el código exacto pero no sabe que "caída de voltaje" y "voltaje bajo" son lo mismo; una búsqueda semántica sí, pero se pierde con identificadores. Un buen sistema usa las dos, filtra por entorno o equipo (`env=prod`) y deja que un revisor reordene los candidatos antes de actuar.
 
-**Cómo decidir qué piezas activar** (de lo más barato y seguro a lo más caro): ingesta → chunking → filtros → híbrida → reranking → reescritura / multi-consulta / HyDE. Cada pieza se añade **solo si el síntoma lo pide** y la medición lo confirma.
+**Cómo decidir qué piezas activar** (de lo más barato y seguro a lo más caro): ingesta (y, si lo mides necesario, parser con layout / OCR) → chunking → filtros → híbrida → reranking → reescritura / multi-consulta / HyDE. Cada pieza se añade **solo si el síntoma lo pide** y la medición lo confirma.
 
 | Síntoma que ves | Primera pieza a probar | Cómo confirmar |
 | --- | --- | --- |
 | Faltan documentos o salen con basura | Ingesta / OCR | Muestra del texto extraído; páginas sin texto |
+| Las tablas del PDF salen aplanadas o las columnas mezcladas | Parser con *layout* (Docling) | Comparar la tabla extraída con la del PDF; preguntas sobre tablas |
+| Un escaneo sale con errores o sin texto | Mejor fuente; OCR revisado | Comparar por palabras con un texto bueno; contar páginas casi vacías |
 | Respuestas cortadas o ruido en el contexto | Chunking (o padre-hijo) | hit@k **y contexto** |
+| Necesitas citar con página y encabezados, o controlar el tamaño en tokens | Chunking híbrido de Docling | Metadatos del fragmento; tokens medidos con el tokenizador del modelo |
 | No encuentra códigos, números o nombres | BM25 / híbrida | Resultados por tipo de pregunta |
 | Mezcla respuestas de clientes o versiones | Metadatos y filtros | Preguntas dependientes del tipo de cliente, con y sin filtro |
 | El correcto aparece, pero lejos del primer puesto | Reranking | MRR y hit@3 antes y después |
@@ -84,6 +94,7 @@ Ideas centrales:
 - **Ingesta:** proceso que convierte documentos en fragmentos vectorizados guardados en un almacén: extraer, fragmentar, vectorizar, guardar.
 - **Parsing (extracción):** obtener el texto, y su **estructura**, a partir de un formato de archivo.
 - ***Garbage in, garbage out*:** si la extracción mete basura, todo lo posterior trabaja con basura.
+- **Audio y video también son fuentes.** Una charla grabada o un video contienen conocimiento que ningún lector de texto ve. Se **transcriben con Whisper** (voz a texto) y la transcripción entra al mismo pipeline. Se verán en la siguiente sesión.
 
 | Formato | Qué hay que cuidar al extraer |
 | --- | --- |
@@ -91,14 +102,16 @@ Ideas centrales:
 | **HTML** | Descartar lo que no es contenido (scripts, estilos, menús de navegación, pie de página, anuncios) y conservar títulos, párrafos y listas. |
 | **DOCX** | Respetar los **estilos de título** (la estructura del documento) y convertir las **tablas** en texto. |
 | **PDF con texto** | El PDF guarda letras en posiciones, no párrafos ni tablas: las líneas se cortan por el ancho de la hoja y **las tablas se aplanan**. Se suele tomar una sección por página. |
-| **PDF escaneado** | No tiene texto: es una imagen. Requiere OCR. |
+| **PDF escaneado** | No tiene texto: es una imagen. Requiere OCR (secciones 3 y 5). |
+
+Un **parser con análisis de layout** (sección 4) reconstruye tablas y orden de lectura y trae OCR; es opcional y más pesado.
 
 Conceptos relacionados:
 
 - **Sección:** unidad lógica de un documento (un título con su texto, o una página de un PDF). Es la base sobre la que se fragmenta.
 - **Estructura:** la jerarquía de títulos. Conservarla permite citar ("Parte B › Compensaciones") y etiquetar con metadatos.
 - **Tabla aplanada:** una tabla convertida en texto corrido; la información sigue, pero pierde filas y columnas, y un corte de fragmento puede separar un dato de su encabezado.
-- **Extracción con *document AI*:** servicios o librerías que reconocen tablas y diseño, o modelos con visión que leen la página como imagen. Son más precisos con documentos complejos y más caros.
+- **Extracción con *document AI*:** servicios o librerías que reconocen tablas y diseño, o modelos con visión que leen la página como imagen. Son más precisos con documentos complejos y más caros. **Docling** es una opción local y de código abierto (sección 4).
 - **Aviso de lectura:** un buen lector avisa cuando no pudo extraer algo (por ejemplo, una página sin texto) en lugar de ingerir un documento vacío en silencio.
 
 ### Aterrizando la ingesta
@@ -125,7 +138,7 @@ Conceptos relacionados:
 Ideas clave:
 
 - Un escaneo ingerido **sin OCR no existe** para el RAG, y nadie lo notará si no se detecta: contar las páginas sin texto en cada ingesta es la forma más simple de descubrirlo.
-- El OCR comete errores (una "l" por un "1", un decimal perdido): para datos críticos conviene validar o conservar el documento original como fuente de la cita.
+- El OCR comete errores (una "l" por un "1", un decimal perdido): para datos críticos conviene validar o conservar el documento original como fuente de la cita. La sección 5 muestra errores **medidos** y qué se puede (y qué no) mitigar.
 
 ### Aterrizando el OCR
 
@@ -137,7 +150,129 @@ Ideas clave:
 - **Cuándo no.** Si el PDF ya tiene capa de texto, no hace falta OCR; usarlo solo añade errores y costo. Se detecta porque el extractor devuelve texto; si devuelve vacío en una página, ahí sí.
 - **Errores típicos.** (1) No detectar los escaneos y descubrir meses después que "faltaban" documentos. (2) Confiar ciegamente en las cifras del OCR. (3) Descartar el original: conserva el archivo como fuente de la cita.
 
-## 4. Fragmentación (chunking)
+## 4. Parsing moderno con análisis de *layout*
+
+### Docling de un vistazo
+
+| | |
+| --- | --- |
+| **Qué es** | Una librería de **código abierto** para convertir documentos (PDF, Word, PowerPoint, Excel, HTML, imágenes, audio) en un documento **estructurado** que se puede exportar a Markdown o JSON |
+| **Quién lo hace** | Nació en **IBM Research Zurich** (equipo *AI for knowledge*), se abrió en 2024 y hoy lo aloja la **LF AI & Data Foundation** |
+| **Licencia** | El código es **MIT**. Cada modelo que descarga tiene **su propia licencia**: se revisan antes de usarlo en un producto |
+| **Dónde corre** | En tu máquina (local, sin enviar el documento a un servicio), en CPU o GPU |
+| **Qué hace** | Análisis de layout, orden de lectura, tablas, OCR para escaneos y chunking por jerarquía y tokens (sección 8) |
+| **Qué NO hace** | No vectoriza ni busca (eso sigue siendo tu RAG); no garantiza un OCR perfecto (en la sesión, `Rojas` salió como `Fojas`); en la versión probada su transcripción de audio **no conserva los tiempos** en el documento, por eso para citar `mm:ss` se usa un transcriptor aparte; no es liviano (varios cientos de MB de modelos la primera vez) |
+| **Cuándo NO usarlo** | Markdown, HTML o PDF de texto corrido sin tablas ni columnas: un lector simple es más rápido y no instala nada (ver sección 6) |
+
+*Fuente: documentación oficial del proyecto (github.com/docling-project/docling). Las cifras de tiempo y tamaño son las medidas en la sesión.*
+
+- **Análisis de layout** (*document layout analysis*): reconocer, en la **imagen** de una página, las regiones (título, párrafo, lista, tabla, figura, pie de página), su tipo y su **orden de lectura**.
+- **Parser con layout** (por ejemplo **Docling**): un convertidor que aplica ese análisis y, si hace falta, OCR, y entrega un documento **estructurado** (jerarquía de títulos, textos, tablas y la página de cada elemento) en lugar de texto plano.
+- **Por qué hace falta:** un PDF **no tiene párrafos ni tablas, tiene letras en posiciones**. Un extractor simple las lee en el orden en que se guardaron, y de ahí salen las líneas cortadas, las **tablas aplanadas** y las columnas mezcladas.
+
+**Cómo funciona (en cinco pasos).**
+
+| Paso | Qué hace |
+| --- | --- |
+| 1. Layout | Un modelo de visión detecta regiones y su tipo |
+| 2. Orden de lectura | Ordena las regiones (columnas, notas, pies) como las leería una persona |
+| 3. Tablas | Otro modelo reconoce filas, columnas y celdas combinadas |
+| 4. OCR | Solo en las regiones que son imagen sin texto |
+| 5. Resultado | Un documento con jerarquía, tipos de elemento y página, exportable a Markdown o JSON |
+
+En Markdown, HTML y DOCX no hace falta mirar la página: el formato **ya trae** su estructura y se lee directamente. El análisis de layout y el OCR solo se pagan en **PDF e imágenes**.
+
+### Tres tipos de PDF
+
+| Tipo | Cómo se reconoce | Qué hacer |
+| --- | --- | --- |
+| **Con texto** (generado por un programa) | El extractor devuelve texto | Extractor directo; parser con layout **sin OCR** si hay tablas o columnas |
+| **Escaneado** (una imagen por página) | Cero texto en la página | OCR |
+| **Mixto** (páginas con texto y páginas escaneadas, o texto sobre una imagen) | Hay páginas con texto y páginas vacías | Decidir **por página**; OCR solo donde falta el texto |
+
+Un caso que sorprende: hay PDF **con capa de texto** (por ejemplo, informes con diseño tipo presentación) que un parser con layout, sin OCR, trata como imagen y devuelve casi vacíos. La estrategia "primero sin OCR y reintentar con OCR si casi no hay texto" cubre también ese caso.
+
+### Aterrizando el parsing con layout
+
+- **Qué es.** Un lector de documentos que "ve" la página: reconoce regiones y tipos, ordena la lectura y reconstruye las tablas.
+- **Qué hace.** Convierte el archivo en un documento estructurado y lo exporta (Markdown, JSON) o lo entrega ya listo para fragmentar, con la **página** y los **encabezados** de cada elemento.
+- **Para qué sirve.** Para recuperar lo que un extractor de texto pierde: **tablas con estructura**, **orden de lectura** correcto y texto de **escaneos**; y para citar con página y sección.
+- **Analogía de infraestructura.** Pasar de hacer `grep` sobre logs en texto plano a usar un **parser con esquema**: el primero ve líneas; el segundo entiende qué es cada campo. Y el OCR es **reconstruir datos desde una captura de pantalla** de una interfaz que no exporta logs: se puede, con margen de error.
+- **Ejemplo a mano.** Una "página" de juguete es una lista de palabras con coordenadas, guardadas columna por columna: `Zona, Norte, Sur, Dia, 5, 12, Horario, 01:00, 00:00`. Leídas en ese orden salen mezcladas. Agrupando por altura (filas) y ordenando por posición horizontal (columnas) reaparece una tabla de 3 filas × 3 columnas. Un parser con layout hace eso mismo, con un modelo de visión que además ve bordes, celdas combinadas y varias columnas. En el boletín de la sesión, `pypdf` entrega la tabla como una sola línea y Docling como una tabla de 4 filas × 3 columnas (encabezado y tres zonas).
+- **Cuándo no.** Con Markdown limpio, HTML sencillo o PDF de texto corrido sin tablas ni columnas, los lectores simples son más rápidos y no instalan nada. Docling cuesta CPU, cientos de MB de modelos y una dependencia grande.
+- **Errores típicos.** (1) Activar OCR en PDF que ya tienen texto. (2) Dar por buena una tabla sin mirar cómo quedó. (3) No instalar los modelos antes de una demostración. (4) No guardar cómo se leyó cada documento (con o sin OCR) para poder revisarlo.
+
+## 5. OCR en la práctica
+
+La sección 3 explicó qué es el OCR. Aquí, cómo se comporta **de verdad**.
+
+**Motores.**
+
+| Motor | Dónde corre | Comentario |
+| --- | --- | --- |
+| **RapidOCR** | Local | El que Docling usa por defecto; viene incluido |
+| **EasyOCR**, **Tesseract** | Local | Alternativas (Tesseract necesita el programa instalado en el sistema) |
+| **OCR de la nube** (Azure, Google, AWS) | Servicio | Mejor con volumen, formularios y tablas; costo por página y el documento sale de tu red |
+| **Modelo con visión** | Servicio o local | Para documentos complejos; más caro y puede "corregir" o inventar cifras |
+
+**Errores típicos del OCR.** Confusiones entre letras parecidas: **"OpenAl" en lugar de "OpenAI"** (una "l" minúscula por una "I" mayúscula, que se observó probando el OCR con un informe de diseño tipo presentación), `E-217` leído como `E-2l7`, `Rojas` como `Fojas`; cifras (`39,00` leído como `3900`); signos de puntuación cambiados (`:` por `.`); palabras pegadas (`AX-2200Metros`); mayúsculas alteradas (`Equipo Instalado`); y, con imágenes malas, **texto ilegible o ningún texto**.
+
+**Qué se midió en la sesión** (acta escaneada de ejemplo, que es un escaneo limpio y sintético; el OCR de Docling con RapidOCR; las versiones degradadas se generan con Pillow a partir de la misma página):
+
+| Versión del escaneo | Parecido con el texto bueno | Qué cambió |
+| --- | --- | --- |
+| Original (OCR de referencia) | — | `AX-2200Metros`: el código quedó pegado a la palabra siguiente, y BM25 ya no tiene el término `ax-2200` |
+| Limpia, re-renderizada (control) | 100 % | Nada |
+| Leve (2° de inclinación, mitad de píxeles, algo de ruido) | 99 % | Una mayúscula (`Instalado:`) |
+| Media (3°, 35 % de los píxeles, ruido y desenfoque) | 98 % | **`Rojas` → `Fojas`**: el apellido ya no se puede buscar |
+| Fuerte (4°, 25 % de los píxeles, mucho ruido) | 0 % | **No devuelve texto** |
+
+Lecciones: (1) un "98 % de parecido" suena a casi perfecto y **el 2 % que falla puede ser justo el dato que se pregunta**; (2) mide **qué palabras** cambiaron, no un solo porcentaje; (3) con una resolución muy baja **no hay nada que reconocer**; (4) con BM25, un solo carácter cambiado vuelve invisible un código.
+
+**Mitigaciones.** Enderezar la imagen, ampliarla, mejorar el contraste, o **escanear de nuevo a mayor resolución**. En las pruebas de la sesión, **ninguna fue una receta**: enderezar la versión "media" recuperó `Rojas` pero introdujo `Famáliar`; ampliar ×3 no recuperó `Rojas` y añadió cambios de puntuación; con la versión "fuerte", ampliar o enderezar devolvió **texto ilegible** (parecido de 10 % y 27 %), peor que un vacío porque parece texto y entra al índice. Lo que se perdió al escanear no lo recupera el OCR: **mejora la fuente antes que el pre-proceso**, y mide con tu documento.
+
+**Cuándo se justifica.** Solo cuando la página **no tiene capa de texto** (o el parser la trata como imagen). Estrategia práctica: primero sin OCR (rápido) y reintentar con OCR si el resultado casi no tiene texto; guardar en un metadato que la página salió de OCR.
+
+**Costo.** Local: **cero dinero**, pero tiempo y espacio. Medido en la máquina de pruebas (CPU, sin GPU): la primera conversión de un PDF carga los modelos (7 s el boletín; 3 s el OCR del acta después de eso; 23 s el boletín cuando además se descargaron los modelos), después ≈ 1 a 2 s por PDF pequeño. Los modelos pesan ≈ 500 MB (layout y tablas) más ≈ 60 MB de OCR, y el entorno pasa de ≈ 390 MB a ≈ 1.8 GB con PyTorch (solo CPU). En la nube: costo por página y los documentos salen de tu red.
+
+### Aterrizando el OCR en la práctica
+
+- **Qué es.** El OCR como un paso **con errores medibles**, no como una función que "devuelve el texto".
+- **Qué hace.** Produce texto aproximado que hay que validar, con distintos modos de fallo (cambio de letras, palabras pegadas, texto ilegible, nada).
+- **Para qué sirve.** Para que un papel sea un documento más del RAG, sabiendo **qué datos pueden estar mal**.
+- **Analogía de infraestructura.** Un **OCR es un sensor ruidoso**: los datos llegan, pero con una tasa de error. Igual que no se alerta sobre una métrica sin validar el sensor, no se responde con un código leído por OCR sin validarlo.
+- **Ejemplo a mano.** Un escaneo dice "Cliente: Familia Rojas". El OCR devuelve "Familia Fojas". La búsqueda por el apellido "Rojas" deja de coincidir con BM25. El documento "existe", pero esa consulta no lo encuentra.
+- **Cuándo no.** PDF con capa de texto; documentos donde basta un resumen (no se necesitan códigos ni cifras exactas); datos críticos que no se pueden validar.
+- **Errores típicos.** (1) Confiar en un porcentaje global. (2) No distinguir "ningún texto" de "texto ilegible". (3) Pre-procesar sin medir. (4) Tirar el original. (5) No registrar qué texto salió de OCR.
+
+## 6. Cómo elegir un parser
+
+| Situación | Lector simple (a mano) | Parser con layout (Docling) | Servicio de la nube o modelo con visión |
+| --- | --- | --- | --- |
+| Markdown, HTML o DOCX sencillos | **Suficiente** | Funciona, aporta poco | Excesivo |
+| PDF con texto corrido | **Suficiente** | Opcional | Excesivo |
+| PDF con **tablas o columnas** | Tablas aplanadas | **Recomendado** | Si el volumen o la complejidad lo piden |
+| PDF **escaneado** de buena calidad | Solo avisa | **OCR incluido** | Para formularios, manuscritos o tablas difíciles |
+| Documento **sensible** que no puede salir de tu red | **Sí** | **Sí** (corre local) | No, salvo acuerdo y revisión |
+| Entorno **ligero** (sin PyTorch ni modelos) | **Sí** | No | Depende del servicio |
+| **Citar con página** y encabezados | Solo "una sección por página" | **Sí** | Depende |
+
+**Reglas para decidir.**
+1. Empieza con lo simple y **mide** (muestra del texto extraído, preguntas con tablas).
+2. Sube al parser con layout cuando midas que **las tablas, el orden de lectura o los escaneos** cuestan respuestas.
+3. Sube a un servicio o modelo con visión cuando el parser local no alcance (manuscritos, formularios complejos) y el documento pueda salir de tu red.
+4. Un parser nuevo cambia el **formato** del texto (por ejemplo, cómo se escribe una tabla): **revisa las claves de tu conjunto de pruebas**, que pueden depender del formato del lector anterior.
+
+### Aterrizando la elección del parser
+
+- **Qué es.** Una decisión de ingeniería: costo de complejidad frente a calidad de lo extraído.
+- **Para qué sirve.** Para no pagar (en tiempo, dependencias y errores de OCR) por algo que no necesitas, ni quedarte corto cuando lo necesitas.
+- **Analogía de infraestructura.** Elegir entre un script de `awk`, un parser con esquema y un servicio gestionado de observabilidad: empiezas por el más simple que cubre el caso y cambias cuando el caso lo exige y lo puedes demostrar.
+- **Ejemplo a mano.** Tu corpus tiene 90 % de Markdown y un PDF con una tabla de tarifas. Opciones: lectores simples para todo y Docling solo para ese PDF (lectura por tipo de archivo). No instalas PyTorch en todo el entorno si solo un PDF lo necesita (por eso en la sesión el grupo `docling` es **opcional**).
+- **Cuándo no cambiar.** Si los números no mejoran con el parser nuevo y no necesitas sus extras (página, tablas, OCR).
+- **Errores típicos.** (1) Elegir por moda. (2) Cambiar de parser sin volver a medir. (3) No medir el costo de tiempo por documento. (4) Olvidar que un parser distinto da un texto distinto (y fragmentos distintos).
+
+## 7. Fragmentación (chunking)
 
 El **fragmento** (*chunk*) es la **unidad de búsqueda** (lo que se vectoriza y se compara con la pregunta) y la **unidad de contexto** (lo que se copia al prompt y cuesta tokens). Tiene dos presiones opuestas:
 
@@ -168,6 +303,7 @@ No existe un tamaño correcto universal: **se mide**.
 | **Recursivo** | Corta por el separador más grande que quepa (párrafo, línea, oración, palabra) y junta vecinos hasta el tamaño | Respeta la estructura cuando puede y se adapta cuando no; muy usado | Requiere elegir separadores y tamaño |
 | **Semántico** | Mide la similitud entre oraciones consecutivas y corta donde el tema cambia | Fragmentos coherentes | Más cómputo en la ingesta (vectoriza cada oración); no siempre mejora los resultados |
 | **Padre-hijo** | Se busca con fragmentos pequeños (hijos) y se entrega el fragmento grande (padre) al que pertenecen | Precisión al buscar y contexto al responder | Entrega contexto grande; depende de que los padres sean coherentes |
+| **Híbrido de Docling** (opcional, sección 8) | Parte por la jerarquía del documento y por un límite de tokens (parte lo que excede, une lo pequeño) | Fragmentos coherentes, citables (encabezados y página) y acotados en tokens | Requiere Docling; no es la búsqueda híbrida |
 
 ### Cada estrategia, aterrizada
 
@@ -200,7 +336,40 @@ No existe un tamaño correcto universal: **se mide**.
 - **Texto indexado con contexto:** anteponer el título de la sección al texto antes de vectorizar ayuda a desambiguar fragmentos sueltos.
 - **Costo del contexto:** número de palabras (tokens) que se envían al LLM por consulta. Una estrategia con fragmentos grandes puede "ganar" en aciertos solo porque entrega más texto: por eso se compara también el contexto.
 
-## 5. Búsqueda léxica: BM25
+## 8. Chunking híbrido de Docling
+
+> ⚠️ **Terminología.** El **chunking híbrido** de Docling (`HybridChunker`) **no es** la **búsqueda híbrida** (BM25 + vectores, sección 10). Comparten la palabra "híbrido" y nada más: el primero decide **dónde cortar** los documentos (en la ingesta); la segunda decide **cómo buscar** (en la consulta). Se pueden usar las dos a la vez.
+
+- **Chunking híbrido:** fragmentar usando **dos criterios combinados**: la **jerarquía del documento** (encabezados y elementos) y un **límite de tokens**.
+- **Cómo funciona:** (1) parte de los elementos del documento (párrafo, ítem de lista, tabla) y cada fragmento **lleva los encabezados** que lo contienen y las **páginas** donde está; (2) **parte** los que exceden el máximo de tokens; (3) **une** los vecinos pequeños que comparten encabezados mientras quepan.
+- **Token:** unidad en que un modelo cuenta el texto. No es una palabra; cada modelo tiene su **tokenizador**.
+- **`contextualize`:** devuelve **encabezados + texto** del fragmento. Es lo que conviene **vectorizar**.
+- **Tokenizador coincidente:** el chunker debe contar con el tokenizador del **mismo modelo de embeddings** que usarás; si no, "128 tokens" puede ser más o menos para el modelo real.
+
+### Aterrizando el chunking híbrido
+
+- **Qué es.** Un fragmentador que respeta la estructura del documento y, a la vez, controla el tamaño en tokens.
+- **Qué hace.** Genera fragmentos coherentes (no cruzan los límites de sus elementos ni parten tablas que caben), acotados en tokens y con metadatos (`encabezados`, páginas).
+- **Para qué sirve.** Para obtener fragmentos **citables** y **del tamaño que el modelo de embeddings admite**, sin escribir un divisor propio.
+- **Analogía de infraestructura.** Empaquetar logs por evento con un **tamaño máximo de lote**: respetas los límites naturales (un evento completo, un stack trace entero); el evento enorme se trocea y los eventos diminutos del mismo servicio se agrupan hasta llenar el lote.
+- **Ejemplo a mano.** Con "tokens" de juguete (una palabra, un token) y un máximo de 14: dos párrafos cortos de la sección *Pagos* (6 palabras cada uno, más el encabezado) se **unen** en un fragmento de 13 tokens; un párrafo de 26 palabras se **parte** en dos fragmentos de 14; y *Garantía* queda **aparte** (5 tokens) porque tiene otro encabezado, aunque quepa.
+- **Cuándo no.** Texto plano sin estructura (la jerarquía no aporta); documentos ya cortos y autónomos; entornos donde no puedes instalar Docling.
+- **Errores típicos.** (1) Confundirlo con la búsqueda híbrida. (2) Usar un tokenizador distinto al del modelo de embeddings. (3) Vectorizar solo el texto, sin encabezados. (4) Olvidar que el máximo **cuenta también los encabezados**. (5) Elegir un máximo demasiado bajo.
+
+**Qué se midió en la sesión** (modelo `nomic-embed-text-v2-moe`, tokenizador del mismo modelo, 22 preguntas base, búsqueda semántica; los cinco documentos leídos con Docling y tablas en Markdown):
+
+| Configuración | Fragmentos | hit@1 | hit@3 | MRR | Contexto (palabras) |
+| --- | --- | --- | --- | --- | --- |
+| `docling-hibrido`, 64 tokens | 106 | 17/22 | 20/22 | 0.84 | ≈ 71 |
+| **`docling-hibrido`, 128 tokens** (referencia) | 55 | **18/22** | **22/22** | **0.91** | ≈ 158 |
+| `docling-hibrido`, 256 tokens | 37 | 19/22 | 22/22 | 0.92 | ≈ 243 |
+| Oraciones de 70 palabras (línea base) | 59 | 18/22 | 21/22 | 0.87 | ≈ 160 |
+
+Con 128 tokens los fragmentos miden de 38 a 126 tokens (media 81); los de "oraciones de 70 palabras" miden en media 77 tokens con el mismo tokenizador. Resultado: **empate técnico con "oraciones"** (misma hit@1; una pregunta más en hit@3; cuatro centésimas de MRR, que con 22 preguntas son ruido). **Su valor no es ganar esta prueba**, sino: un solo parser para todos los formatos (con OCR: el acta escaneada queda buscable), la **tabla entera con sus filas** en un fragmento, **citas con página y encabezados**, y el tamaño controlado en tokens.
+
+**Una trampa de evaluación.** Con el formato por defecto de Docling para tablas (cada celda como una frase "columna = valor"), la pregunta de la tabla del Word deja de coincidir con su `clave` (escrita con el formato de tabla de nuestro lector) y el resultado baja a 16/22 (MRR 0.84). Moraleja: una **clave atada al formato de un lector** puede penalizar a otro; al cambiar de parser, revisa las claves.
+
+## 9. Búsqueda léxica: BM25
 
 - **Búsqueda léxica:** busca por **palabras exactas**, no por significado.
 - **BM25:** algoritmo clásico de búsqueda léxica (usado por Lucene, Elasticsearch y OpenSearch). Puntúa más a un fragmento cuando contiene las palabras de la consulta, sobre todo si son raras y si aparecen varias veces.
@@ -250,7 +419,7 @@ Cada una **cubre el punto ciego de la otra**.
 
 Referencia medida en la sesión (oraciones de 70 palabras): en las preguntas léxicas, semántica 8/11 y BM25 **11/11**; en las semánticas, semántica 8/9 y BM25 6/9.
 
-## 6. Búsqueda híbrida y fusión RRF
+## 10. Búsqueda híbrida y fusión RRF
 
 - **Búsqueda híbrida:** ejecutar la búsqueda léxica y la semántica y **combinar** sus resultados.
 - **Problema de las escalas:** el coseno (0 a 1) y el puntaje BM25 (0 a 20 o más) no son comparables; sumarlos no tiene sentido.
@@ -284,7 +453,7 @@ Ideas clave:
 - **Cuándo no.** En un corpus pequeño la híbrida con pesos 1:1 puede quedar entre las dos (18/22 en la sesión, igual a la semántica sola). Con pesos que favorecen a BM25 (semántica 1, BM25 2) llegó a 20/22 y MRR 0.91, pero esos pesos se eligieron con las mismas preguntas: es una ilustración, no una prueba.
 - **Errores típicos.** (1) Normalizar y sumar puntajes. (2) Fusionar listas muy cortas (cada buscador debería aportar al menos 10 candidatos). (3) Aplicar el filtro después de fusionar en lugar de dentro de cada búsqueda.
 
-## 7. Metadatos y filtros
+## 11. Metadatos y filtros
 
 - **Metadatos:** datos sobre cada fragmento (fuente, sección, tipo de archivo, audiencia, fecha, permisos). Se asignan en la **ingesta**.
 - **Filtro por metadatos:** restricción que se aplica **dentro** de la búsqueda (solo candidatos con `publico = negocio`), antes de que nada llegue al prompt.
@@ -316,7 +485,7 @@ Reglas importantes:
 - **Cuándo no basta.** El filtro decide qué se puede ver, no qué es más relevante. Y si el metadato está mal asignado en la ingesta, esconde documentos correctos o muestra los equivocados.
 - **Errores típicos.** (1) Filtrar en el prompt. (2) Dejar que el LLM o el texto de la pregunta decidan el filtro. (3) No auditar los metadatos. (4) No definir un valor por defecto (`general`) para lo que no tiene audiencia.
 
-## 8. Reranking
+## 12. Reranking
 
 El **reranking** añade una **segunda etapa**: después de recuperar muchos candidatos de forma rápida, un modelo más preciso los **reordena** y se envían al prompt solo los mejores.
 
@@ -354,7 +523,7 @@ Limitaciones:
 - **Cuándo no.** Si hit@3 ya es alto y la etapa 1 deja lo correcto arriba, el reranking solo añade costo.
 - **Errores típicos.** (1) Pocos candidatos en la etapa 1. (2) Reordenar con un LLM pequeño sin medir. (3) Ignorar la latencia, que es una llamada extra en el camino de la respuesta. (4) Mandar fragmentos enormes al reranker (se recortan).
 
-## 9. Reescritura y expansión de la consulta
+## 13. Reescritura y expansión de la consulta
 
 El usuario no escribe consultas de búsqueda: escribe como habla.
 
@@ -387,7 +556,7 @@ Buenas prácticas:
 - **Qué cuesta cada una.** Reescritura: una llamada pequeña por pregunta, solo con historial. Multi-consulta: una llamada para generar las variantes y N+1 búsquedas. HyDE: una llamada para generar el texto hipotético. Todas añaden latencia y un punto de falla.
 - **Medido en la sesión (modelo local pequeño).** La reescritura con búsqueda híbrida pasó de 1/4 a 2/4 en hit@1, y en una de las cuatro el modelo perdió el nombre del plan ("¿Y trae IP fija?" quedó como "¿Trata de IP fija?"). La multi-consulta **empeoró** de 8/9 a 5/9 porque las variantes inventaron temas. Con solo 4 y 9 preguntas es una ilustración, no una prueba.
 
-## 10. Evaluar la recuperación
+## 14. Evaluar la recuperación
 
 Evaluar la recuperación **por separado de la generación** permite saber si el problema es "no encontró el dato" o "lo encontró y respondió mal".
 
@@ -416,9 +585,9 @@ Conceptos asociados:
 - **Cuándo no basta.** Miden recuperación, no si el LLM responde bien (Sesión 7). Con 22 preguntas, 1 o 2 aciertos de diferencia son ruido. hit@1 y MRR premian a los fragmentos grandes, por eso se mira el contexto al lado.
 - **Errores típicos.** (1) Declarar ganador por una pregunta. (2) Comparar MRR sin mirar el contexto. (3) Cambiar varias cosas a la vez. (4) Ajustar con las mismas preguntas con que se evalúa.
 
-Cifras de referencia de la sesión (modelo `nomic-embed-text-v2-moe`, 22 preguntas base, búsqueda semántica): línea base (oraciones de 70 palabras) 18/22 en hit@1, 21/22 en hit@3, MRR 0.87, ≈ 160 palabras de contexto; por sección 20/22, MRR 0.95, ≈ 345 palabras; tamaño fijo de 40 palabras 13/22; padre-hijo 22/22, MRR 1.00, ≈ 364 palabras. Pueden variar en uno o dos aciertos con otro equipo.
+Cifras de referencia de la sesión (modelo `nomic-embed-text-v2-moe`, 22 preguntas base, búsqueda semántica): línea base (oraciones de 70 palabras) 18/22 en hit@1, 21/22 en hit@3, MRR 0.87, ≈ 160 palabras de contexto; por sección 20/22, MRR 0.95, ≈ 345 palabras; tamaño fijo de 40 palabras 13/22; padre-hijo 22/22, MRR 1.00, ≈ 364 palabras; `docling-hibrido` de 128 tokens (opcional) 18/22, 22/22 en hit@3, MRR 0.91, ≈ 158 palabras (empate técnico con "oraciones"). Pueden variar en uno o dos aciertos con otro equipo.
 
-## 11. Glosario ampliado
+## 15. Glosario ampliado
 
 | Término | Definición breve |
 | --- | --- |
@@ -427,7 +596,16 @@ Cifras de referencia de la sesión (modelo `nomic-embed-text-v2-moe`, 22 pregunt
 | **Sección** | Unidad lógica de un documento: un título con su texto o una página de un PDF |
 | **Aviso de lectura** | Señal de que el lector no pudo extraer algo (p. ej. una página sin texto) |
 | **Reingesta** | Volver a procesar un documento cuando cambia, para no servir contenido viejo |
+| **Layout (análisis de)** | Reconocer las regiones de una página (título, párrafo, tabla, figura) y su orden de lectura |
+| **Orden de lectura** | La secuencia en que una persona leería las regiones de una página |
+| **Docling** | Convertidor de documentos con layout, tablas y OCR; produce un `DoclingDocument` |
+| **`DoclingDocument`** | Documento estructurado: jerarquía de títulos, textos, tablas y la página de cada elemento |
+| **PDF con texto / escaneado / mixto** | Con capa de texto; solo imágenes; o con páginas de ambos tipos |
+| **Capa de texto** | El texto que un PDF guarda además de su aspecto visual |
 | **OCR** | Convertir una imagen de texto en texto |
+| **Motor de OCR** | Programa que reconoce texto en imágenes (RapidOCR, EasyOCR, Tesseract, servicios de la nube) |
+| **RapidOCR** | Motor de OCR local que Docling usa por defecto |
+| **Error de OCR** | Letra o símbolo mal reconocido ("OpenAl" por "OpenAI", `Fojas` por `Rojas`), palabras pegadas o texto ilegible |
 | **Document AI** | Servicios que reconocen tablas y diseño de documentos complejos |
 | **Chunk / chunking** | Fragmento de un documento / proceso de partir documentos |
 | **Unidad de búsqueda** | Lo que se vectoriza y se compara con la pregunta (el fragmento) |
@@ -436,6 +614,11 @@ Cifras de referencia de la sesión (modelo `nomic-embed-text-v2-moe`, 22 pregunt
 | **Chunking recursivo** | Cortar por el separador más grande que quepa |
 | **Chunking semántico** | Cortar donde cambia el tema según la similitud entre oraciones |
 | **Padre-hijo** | Buscar con fragmentos pequeños (hijos) y entregar el grande (padre) |
+| **Chunking híbrido (Docling)** | Fragmentar por jerarquía del documento y límite de tokens; **no** es la búsqueda híbrida |
+| **`HybridChunker`** | La clase de Docling que implementa ese chunking |
+| **Token** | Unidad en que un modelo cuenta el texto; no es una palabra y depende del tokenizador |
+| **Tokenizador** | Programa que convierte texto en tokens; cada modelo tiene el suyo |
+| **`contextualize`** | Antepone los encabezados al texto de un fragmento: lo que conviene vectorizar |
 | **BM25** | Algoritmo de búsqueda por palabras (frecuencia, IDF, longitud) |
 | **TF** | Frecuencia del término: cuántas veces aparece una palabra en el fragmento |
 | **IDF** | Qué tan rara es una palabra en el corpus |
@@ -465,7 +648,7 @@ Cifras de referencia de la sesión (modelo `nomic-embed-text-v2-moe`, 22 pregunt
 | **Clave** | Texto que debe aparecer en un fragmento para que ese fragmento contenga la respuesta |
 | **Línea base** | Resultado de la versión actual contra el que se compara cada mejora |
 
-## 12. Preguntas de repaso con respuesta
+## 16. Preguntas de repaso con respuesta
 
 1. **¿Qué dos presiones opuestas hay al elegir el tamaño de un fragmento?** Un fragmento pequeño da un vector preciso pero poco contexto; uno grande da contexto completo pero un vector diluido, más tokens y más ruido.
 2. **¿Por qué la estrategia por sección "gana" en MRR y por qué eso puede engañar?** Porque una sección entera casi siempre contiene la clave; pero entrega más del doble de contexto (≈ 345 frente a ≈ 160 palabras), así que gana en parte por ser grande.
@@ -477,6 +660,14 @@ Cifras de referencia de la sesión (modelo `nomic-embed-text-v2-moe`, 22 pregunt
 8. **¿Cuándo no reescribirías la consulta?** Cuando no hay historial: añade un LLM, latencia y riesgo de perder datos sin necesidad.
 9. **Un reranker no mejora tus resultados. ¿Qué dos cosas revisas primero?** Que la etapa 1 traiga suficientes candidatos (si el correcto no entra, no se rescata) y que el modelo reranker sea capaz para esa tarea (un modelo pequeño puede desordenar lo que ya estaba bien).
 10. **¿Cómo te das cuenta de que a tu RAG le faltan documentos escaneados?** Contando las páginas sin texto en cada ingesta y avisando; un escaneo sin OCR no existe para el RAG.
+11. **¿Qué tiene realmente un PDF, y qué añade el análisis de layout?** Tiene letras en posiciones (no párrafos, filas ni columnas). El análisis de layout reconoce las regiones y su tipo, reconstruye el orden de lectura y las tablas, y decide dónde hace falta OCR.
+12. **Un PDF casi no devuelve texto. ¿Qué haces?** Compruebas si tiene capa de texto. Si no la tiene (escaneo) o el parser lo trata como imagen, reintentas con OCR; si la tiene, no usas OCR (añade errores). Guardas que esa página salió de OCR.
+13. **Un OCR da 98 % de parecido con el texto bueno. ¿Está bien?** No necesariamente: el 2 % puede ser justo el apellido o el código que se pregunta (`Rojas` → `Fojas`). Se miden las **palabras que cambiaron**, no un solo porcentaje, y se validan los datos críticos.
+14. **¿Siempre ayuda enderezar o ampliar la imagen antes del OCR?** No. En las pruebas de la sesión, enderezar recuperó un apellido pero introdujo otro error; ampliar no lo recuperó; con una imagen muy degradada, ambas devolvieron texto ilegible. Lo que se perdió al escanear no lo recupera el OCR: se mejora la fuente y se mide.
+15. **¿Qué diferencia hay entre el chunking híbrido de Docling y la búsqueda híbrida?** El chunking híbrido decide **dónde cortar** (jerarquía del documento + límite de tokens, en la ingesta). La búsqueda híbrida decide **cómo buscar** (BM25 + vectores con RRF, en la consulta). Se pueden usar juntos.
+16. **¿Por qué el tokenizador del chunker debe ser el del modelo de embeddings?** Porque los tokens se cuentan distinto en cada modelo; con otro tokenizador, "128 tokens" puede ser más o menos para el modelo real y el límite engaña.
+17. **`docling-hibrido` empató con "oraciones" en el laboratorio. ¿Para qué sirve entonces?** Para lo que la nota no mide: un solo parser con OCR para todos los formatos, tablas enteras con sus filas, citas con página y encabezados, y tamaño controlado en tokens. Y se compara con el mismo criterio de siempre: hit@k, MRR y contexto.
+18. **¿Cuándo eliges un lector simple y cuándo un parser con layout?** Lector simple para Markdown, HTML, DOCX sencillos y PDF de texto corrido (rápido, sin dependencias). Parser con layout cuando mides que las tablas, el orden de lectura o los escaneos te cuestan respuestas, y puedes asumir CPU, modelos y una dependencia grande.
 
 ---
 

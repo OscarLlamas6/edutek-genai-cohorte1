@@ -26,6 +26,24 @@ dev = [
     "ipywidgets>=8.1",
     "reportlab>=4.2",
 ]
+# Parsing moderno (OPCIONAL): Docling + OCR. Pesado (cientos de MB de modelos la primera vez), por eso va aparte:
+#   uv sync --group docling
+docling = [
+    "docling>=2.60",
+    "torch>=2.4",
+    "torchvision>=0.19",
+]
 
 [tool.uv]
 package = false
+
+# torch SOLO CPU: la versión por defecto de PyPI arrastra gigas de CUDA que aquí no se usan.
+[tool.uv.sources]
+# (en macOS la versión normal de PyPI ya es solo CPU, por eso el marcador)
+torch = { index = "pytorch-cpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }
+torchvision = { index = "pytorch-cpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

@@ -44,7 +44,7 @@ from cliente_llm import PRECIOS, contar_tokens_exacto, modelo_economico, proveed
 # Precios
 # ─────────────────────────────────────────────────────────────────────────────
 # La tabla PRECIOS (USD por MILLÓN de tokens, como (entrada, salida)) vive en cliente_llm.py y
-# incluye modelos de Anthropic y de OpenAI. Referencia a octubre de 2026: los precios cambian,
+# incluye modelos de Anthropic y de OpenAI. Referencia al preparar el curso: los precios cambian,
 # confirma siempre en la página oficial del proveedor antes de presupuestar.
 # Observa que los tokens de SALIDA cuestan varias veces más que los de entrada.
 

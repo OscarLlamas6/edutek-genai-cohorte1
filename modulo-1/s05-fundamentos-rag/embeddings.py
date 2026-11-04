@@ -47,7 +47,7 @@ MODELO_POR_DEFECTO = {
     "openai": "text-embedding-3-small",
 }
 
-# USD por millón de tokens (referencia a octubre de 2026; confirma en la página de precios).
+# USD por millón de tokens (referencia al preparar el curso; confirma en la página de precios).
 PRECIOS_EMBEDDINGS = {"text-embedding-3-small": 0.02}
 
 # Algunos modelos de embeddings esperan un PREFIJO distinto para documentos y para consultas

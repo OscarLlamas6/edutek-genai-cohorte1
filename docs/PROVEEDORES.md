@@ -58,7 +58,7 @@ En nuestro cliente el razonamiento se controla con `esfuerzo` = `"minimo"`, `"ba
 
 ## Costos
 
-Los dos proveedores son de **pago por uso**. Los precios de referencia (octubre de 2026) están en `docs/COSTOS.md` y en la tabla `PRECIOS` de `cliente_llm.py`. Los dos modelos económicos cuestan lo mismo, así que las estimaciones 💰 FYI de los notebooks valen para ambos. **Configura un límite de gasto** en la consola de tu proveedor.
+Los dos proveedores son de **pago por uso**. Los precios de referencia (al preparar el curso) están en `docs/COSTOS.md` y en la tabla `PRECIOS` de `cliente_llm.py`. Los dos modelos económicos cuestan lo mismo, así que las estimaciones 💰 FYI de los notebooks valen para ambos. **Configura un límite de gasto** en la consola de tu proveedor.
 
 ## Embeddings (Sesiones 4 y 5)
 

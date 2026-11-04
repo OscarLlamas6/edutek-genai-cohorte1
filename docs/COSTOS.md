@@ -35,7 +35,7 @@ costo = (tokens de entrada × precio de entrada + tokens de salida × precio de 
 
 Los precios se expresan en **USD por millón de tokens**. Los tokens de salida cuestan varias veces más que los de entrada, y los tokens de **razonamiento interno** de los modelos que "piensan" se cobran **como salida**.
 
-Precios de referencia usados en el curso (**octubre de 2026**; confirma siempre en la página oficial de precios de tu proveedor):
+Precios de referencia usados en el curso (**al preparar el curso**; confirma siempre en la página oficial de precios de tu proveedor):
 
 | Modelo | Entrada (USD / M tokens) | Salida (USD / M tokens) | Uso en el curso |
 | --- | --- | --- | --- |

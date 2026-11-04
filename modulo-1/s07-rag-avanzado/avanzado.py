@@ -1,4 +1,4 @@
-"""Técnicas avanzadas de recuperación: small-to-big, encabezados contextuales, descomposición y HyDE.
+"""Técnicas avanzadas de recuperación: small-to-big, encabezados contextuales, contextual retrieval, descomposición y HyDE.
 
 El RAG básico (rag.py) recupera los k fragmentos más parecidos a la pregunta y se los da al modelo.
 Falla de formas predecibles; cada técnica de este módulo ataca una:
@@ -11,6 +11,8 @@ Falla de formas predecibles; cada técnica de este módulo ataca una:
     La pregunta necesita DOS temas (multi-salto)  DESCOMPOSICIÓN: separar en subpreguntas
     La pregunta no se parece al texto de la       HyDE: buscar con una respuesta hipotética
     respuesta
+    Un fragmento suelto no dice de qué documento  CONTEXTUAL RETRIEVAL: un LLM escribe una frase de
+    ni de qué parte viene                         contexto por fragmento ANTES de vectorizarlo
 
 Qué NO está aquí, porque se vio en la Sesión 6: reescritura de la consulta, búsqueda híbrida
 (palabras clave + semántica) y reranking. Y la técnica que no se resuelve con fragmentos, GraphRAG,
@@ -25,6 +27,7 @@ métricas (evaluacion.evaluar_rag(recuperador=...)):
     - small-to-big y los encabezados NO llaman al LLM (solo embeddings locales): gratis.
     - La descomposición y HyDE hacen 1 llamada corta al LLM por pregunta (gratis con el modelo local;
       ≈ US$ 0.0002 con un modelo de proveedor).
+    - El contextual retrieval hace 1 llamada al LLM por FRAGMENTO, una sola vez al indexar (no por pregunta).
 """
 
 from __future__ import annotations
@@ -127,8 +130,8 @@ class RecuperadorSmallToBig:
 
 # ───────────────────────── 2. Descomposición de preguntas (multi-salto) ─────────────────────────
 #
-# "Si mi factura venció y quiero pagar en efectivo un sábado, ¿hasta qué hora puedo ir?" necesita DOS
-# temas (facturación y agencias). Un solo vector de la pregunta completa se parece un poco a cada uno y
+# "Me suspendieron por falta de pago y voy a pagar hoy en una agencia, ¿en cuánto tiempo se reactiva el
+# servicio y qué documento debo llevar?" necesita DOS temas (facturación y agencias). Un solo vector de la pregunta completa se parece un poco a cada uno y
 # mucho a ninguno. Separarla en subpreguntas permite buscar cada tema por separado y juntar los resultados.
 
 
@@ -210,3 +213,29 @@ class RecuperadorHyDE:
         self.hipotesis[pregunta] = r.texto.strip()
         vector = vectorizar([r.texto.strip()], tipo="documento")[0]     # se trata como un documento, no como consulta
         return self.almacen.buscar(vector, k=k)
+
+
+# ───────────────────────── 4. Contextual retrieval: una frase de contexto por fragmento ─────────────────────────
+#
+# Un encabezado ("3. Facturación y pagos") ya da algo de contexto. El contextual retrieval va más lejos: un LLM
+# LEE el documento completo y el fragmento, y escribe UNA frase que lo sitúa ("Esta parte explica cuándo se
+# suspende el servicio por falta de pago"). Esa frase se antepone al fragmento ANTES de vectorizarlo (y de
+# construir el índice BM25, si lo hay). Se paga una vez al indexar, no en cada pregunta.
+
+
+def contextualizar(fragmentos: list[Fragmento], documento: str, proveedor: str | None = None, version: str = "v1",
+                   max_tokens: int = 80) -> tuple[dict[str, str], list[ResultadoLLM]]:
+    """💰 1 llamada corta al LLM por fragmento. Devuelve {id_fragmento: frase_de_contexto} y las llamadas (con su costo)."""
+    contextos: dict[str, str] = {}
+    llamadas: list[ResultadoLLM] = []
+    for f in fragmentos:
+        r = generar(renderizar("contexto", version, documento=documento, fragmento=f.texto), proveedor, max_tokens=max_tokens)
+        llamadas.append(r)
+        contextos[f.id] = " ".join(r.texto.strip().strip('"').split())
+    return contextos, llamadas
+
+
+def texto_con_contexto(f: Fragmento, contexto: str, con_encabezado: bool = False) -> str:
+    """Lo que se vectoriza: [encabezado.] contexto. texto."""
+    base = f"{contexto} {f.texto}".strip()
+    return f"{f.metadatos['seccion']}. {base}" if con_encabezado else base

@@ -16,6 +16,12 @@ Lo que hace cada lector:
     .docx  respeta los estilos de título (Heading 1/2) y convierte las TABLAS en líneas de texto.
     .pdf   extrae una sección por PÁGINA. Si una página no tiene texto (un escaneo), lo avisa: hace falta OCR.
 
+Y dos fuentes más, fuera de este módulo:
+    Docling  (parsing_docling.py, OPCIONAL) un solo convertidor para todos los formatos, con análisis de layout
+             (tablas, orden de lectura) y OCR para los escaneos. Se instala con `uv sync --group docling`.
+    audio y video   también son fuentes: se transcriben con Whisper y la transcripción entra al mismo pipeline
+             (se verá en la siguiente sesión).
+
 💰 COSTO: ninguno. Todo corre en tu equipo.
 """
 

@@ -2,7 +2,7 @@
 
 **Tiempo:** ≈ 10 minutos · **Costo:** US$ 0 (plan Free, sin tarjeta) · **Se usa en:** Sesiones 4 y 5
 
-> Las pantallas de Neon cambian con frecuencia. Si algún botón no está donde dice esta guía, busca uno equivalente; el flujo es el mismo. Los datos de planes y precios de este documento se verificaron en octubre de 2026: confirma siempre en [neon.com/pricing](https://neon.com/pricing).
+> Las pantallas de Neon cambian con frecuencia. Si algún botón no está donde dice esta guía, busca uno equivalente; el flujo es el mismo. Los datos de planes y precios de este documento se verificaron al preparar el curso: confirma siempre en [neon.com/pricing](https://neon.com/pricing).
 
 ## 1. ¿Qué es Neon?
 

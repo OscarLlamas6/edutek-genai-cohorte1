@@ -42,3 +42,16 @@ Un prompt es código: cada cambio se registra, se prueba y puede revertirse.
 | --- | --- | --- |
 | v1 | Extrae tripletas con tres relaciones permitidas; los nombres salen del texto. | Línea base de extracción de un grafo con un LLM. |
 | v2 | Añade la lista de entidades conocidas: nombres exactos y solo esos. | Los nombres libres no se pueden unir en un grafo (el mismo servicio con tres escrituras). |
+
+## contexto
+
+| Versión | Qué cambió | Por qué |
+| --- | --- | --- |
+| v1 | Recibe el documento completo y un fragmento; pide UNA frase de contexto (máximo 25 palabras) que lo sitúe, sin repetir cifras ni inventar. | Contextual retrieval (Sesión 7): vectorizar el fragmento junto con una frase que diga de qué trata y dónde está. |
+
+## rag_media
+
+| Versión | Qué cambió | Por qué |
+| --- | --- | --- |
+| v1 | Responde en español usando solo fragmentos de una transcripción (que puede estar en otro idioma) y cita cada dato con el rango de tiempo `[mm:ss–mm:ss]`. | RAG multimodal (Sesión 7): una respuesta sobre un audio o un video debe poder verificarse en el reproductor. |
+| v2 | Repite al final del prompt, después de la pregunta, la instrucción de terminar con el rango de tiempo del tramo usado. | Con v1, el modelo local de 3B citaba el tramo solo en algunas respuestas y en una pregunta se abstuvo teniendo el tramo correcto entre los recuperados. Con v2 citó en las 6 preguntas probadas, en dos corridas. |

@@ -68,7 +68,7 @@ MODELOS_POR_PROVEEDOR = {
     "openai": {"economico": "gpt-6-luna", "muestreo": "gpt-6-luna"},
 }
 
-# USD por millón de tokens: (entrada, salida). Referencia a octubre de 2026.
+# USD por millón de tokens: (entrada, salida). Referencia al preparar el curso.
 # Los precios cambian: confirma en la página oficial de tu proveedor antes de presupuestar.
 PRECIOS: dict[str, tuple[float, float]] = {
     # Anthropic

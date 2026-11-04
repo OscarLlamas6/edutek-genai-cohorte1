@@ -51,7 +51,7 @@
 | `python-dotenv` | Leer credenciales del `.env` |
 | `jupyterlab`, `ipykernel`, `ipywidgets` | Ejecutar notebooks (grupo `dev`) |
 
-Versiones con las que se probó esta sesión (octubre de 2026): `langchain` 1.4.7 · `langchain-core` 1.7.0 · `langgraph` 1.2.18 · `langchain-anthropic` 1.7.6 · `langchain-openai` 1.7.3 · `anthropic` 1.17.0 · `openai` 3.39.0. El `uv.lock` las fija.
+Versiones con las que se probó esta sesión (al preparar el curso): `langchain` 1.4.7 · `langchain-core` 1.7.0 · `langgraph` 1.2.18 · `langchain-anthropic` 1.7.6 · `langchain-openai` 1.7.3 · `anthropic` 1.17.0 · `openai` 3.39.0. El `uv.lock` las fija.
 
 ## Instalación
 
@@ -101,7 +101,7 @@ Un agente hace **varias llamadas al modelo por pregunta** (decidir, leer cada re
 
 Total aproximado con un modelo de proveedor: **menos de US$ 0.03**. Detalle en [`docs/COSTOS.md`](../../docs/COSTOS.md).
 
-> Los precios son los del modelo económico de cada proveedor (octubre de 2026): confírmalos en la página oficial antes de presupuestar. Si un agente entra en un bucle, el gasto crece: por eso el programa corta con un **límite de pasos**.
+> Los precios son los del modelo económico de cada proveedor (al preparar el curso): confírmalos en la página oficial antes de presupuestar. Si un agente entra en un bucle, el gasto crece: por eso el programa corta con un **límite de pasos**.
 
 ## Solución de problemas
 
