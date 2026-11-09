@@ -26,6 +26,16 @@
 | `datos/` | `servicios.json` (estado simulado), `manual_soporte.md` (de la Sesión 5) y `preguntas_agente.json` (7 preguntas para evaluar la elección de herramientas) |
 | `pyproject.toml`, `uv.lock`, `.python-version` | Entorno de la sesión (**Python 3.12**) |
 
+## Implementación en `ai-agents-playground`
+
+El agente más pequeño posible de esta sesión (unas 35 líneas, con cada elemento numerado) vive en el repositorio **[`ai-agents-playground`](https://github.com/OscarLlamas6/ai-agents-playground)**, carpeta **`langchain-basic`**. Proveedor por defecto: **OpenAI**, con soporte para Anthropic y LM Studio (`LLM_PROVIDER`).
+
+```bash
+cd ../../../ai-agents-playground/langchain-basic   # o clona el repositorio
+uv sync
+uv run python agent.py --trace "¿Cómo está la VPN?"
+```
+
 ## Requisitos
 
 | | |
@@ -62,7 +72,7 @@ cd modulo-1/s08-agentes-langchain
 uv sync
 ```
 
-Variables del `.env` (además de las de sesiones anteriores): `AGENT_PROVIDER` (`anthropic`, `openai` o `local`; si no existe se usa `LLM_PROVIDER`), `LOCAL_LLM_URL` y `LOCAL_LLM_MODEL` si usas un modelo local. LangSmith (trazas en la nube) **no** hace falta.
+Variables del `.env` (además de las de sesiones anteriores): `AGENT_PROVIDER` (`openai` por defecto, `anthropic` o `local`; si no existe se usa `LLM_PROVIDER`, y si tampoco, `openai`), `LOCAL_LLM_URL` y `LOCAL_LLM_MODEL` si usas un modelo local. LangSmith (trazas en la nube) **no** hace falta.
 
 ## Ejecutar el notebook
 

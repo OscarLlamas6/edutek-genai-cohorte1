@@ -16,16 +16,19 @@ Cada sesión es un **proyecto independiente** (su propio entorno, su propia vers
 | 2 | [S4](s04-embeddings-bases-vectoriales/) | Embeddings y bases de datos vectoriales (Neon y Pinecone) | 3.12 | ✅ | Disponible |
 | 2 | [S5](s05-fundamentos-rag/) | Fundamentos de RAG y un RAG simple con citas | 3.12 | ✅ | Disponible |
 | 3 | [S6](s06-rag-intermedio/) | RAG intermedio: ingesta, chunking, búsqueda híbrida, filtros, reranking y reescritura | 3.12 | ✅ | Disponible |
-| 3 | [S7](s07-rag-avanzado/) | RAG avanzado: técnicas, GraphRAG, evaluación y alucinaciones | 3.12 | ✅ | Disponible |
-| 3 | [S8](s08-agentes-langchain/) | Fundamentos de un agente de IA con LangChain (tool calling) | 3.12 | ✅ | Disponible |
-| 4 | S9 | Introducción a agentes | — | — | Próximamente |
-| 4 | S10 | Memoria y estado en agentes | — | — | Próximamente |
-| 4 | S11 | MCP: fundamentos | — | — | Próximamente |
-| 5 | S12 | Construyendo con MCP | — | — | Próximamente |
-| 5 | S13 | Automatización con n8n | — | — | Próximamente |
-| 5 | S14 | Agente con RAG + MCP | — | — | Próximamente |
+| 3 | [S7](s07-rag-avanzado/) | RAG avanzado y GraphRAG (notebook + implementación en `rag-playground/rag-avanzado`) | 3.12 | ✅ | Disponible |
+| 3 | [S8](s08-agentes-langchain/) | Fundamentos de agentes de IA con LangChain (notebook + `ai-agents-playground/langchain-basic`) | 3.12 | ✅ | Disponible |
+| 4 | [S9](s09-langchain-rag-agentico/) | LangChain: características útiles y RAG agéntico (notebook + `ai-agents-playground/langchain-agentic-rag`) | 3.12 | ✅ | Disponible |
+| 4 | S10 | Introducción a agentes | — | — | Próximamente |
+| 4 | S11 | Memoria y estado en agentes | — | — | Próximamente |
+| 4 | S12 | MCP: fundamentos | — | — | Próximamente |
+| 5 | S13 | Construyendo con MCP | — | — | Próximamente |
+| 5 | S14 | Automatización con n8n | — | — | Próximamente |
+| 5 | S15 | Agente con RAG + MCP | — | — | Próximamente |
 
-> **Numeración.** Desde la Semana 3 la numeración de las carpetas va **una unidad por debajo** de la del programa (la S7 del programa es la carpeta `s06-…`, y así hasta la S15 del programa, que es la `s14-…`), porque las sesiones de embeddings y RAG simple se fusionaron en la Semana 2.
+> **Numeración.** La S6 a la S8 de las carpetas corresponden a la S7 a la S9 del programa (las sesiones de embeddings y RAG simple se fusionaron en la Semana 2). La **S9 del repositorio es una sesión adicional** (RAG agéntico con LangChain) y desde la **S10** la numeración vuelve a coincidir con la del programa.
+>
+> **Dónde vive la práctica.** Desde la S7 hay un solo notebook por sesión y las implementaciones de referencia están en dos repositorios aparte: [`rag-playground`](https://github.com/OscarLlamas6/rag-playground) (RAG simple, intermedio y avanzado) y [`ai-agents-playground`](https://github.com/OscarLlamas6/ai-agents-playground) (un agente por carpeta). Desde la S7 el proveedor de LLM por defecto es **OpenAI**, con soporte para Anthropic y LM Studio (`LLM_PROVIDER`).
 
 ## Cómo trabajar una sesión
 

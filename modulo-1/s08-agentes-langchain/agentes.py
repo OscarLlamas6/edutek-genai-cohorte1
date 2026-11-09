@@ -15,7 +15,7 @@ QUÉ ES UN AGENTE (en una línea)
     agente_manual.py hace lo mismo "a mano" con el SDK del proveedor, para que veas qué hay debajo.
 
 CÓMO ELEGIR EL MODELO (en tu .env)
-    AGENT_PROVIDER=anthropic | openai | local   (si no existe, se usa LLM_PROVIDER; por defecto anthropic)
+    AGENT_PROVIDER=anthropic | openai | local   (si no existe, se usa LLM_PROVIDER; por defecto openai)
     LLM_MODEL=...                                (opcional: otro modelo de proveedor)
     LOCAL_LLM_URL / LOCAL_LLM_MODEL              (modelo local: LM Studio, Ollama…)
 
@@ -64,8 +64,8 @@ LIMITE_PASOS = 12
 
 
 def proveedor_agente(preferido: str | None = None) -> str:
-    """AGENT_PROVIDER, o si no existe LLM_PROVIDER, o anthropic."""
-    p = (preferido or os.getenv("AGENT_PROVIDER") or os.getenv("LLM_PROVIDER", "anthropic")).strip().lower()
+    """AGENT_PROVIDER, o si no existe LLM_PROVIDER, o openai."""
+    p = (preferido or os.getenv("AGENT_PROVIDER") or os.getenv("LLM_PROVIDER", "openai")).strip().lower()
     if p not in PROVEEDORES_AGENTE:
         raise ValueError(f"Proveedor '{p}' no válido. Usa: {', '.join(PROVEEDORES_AGENTE)}.")
     return p

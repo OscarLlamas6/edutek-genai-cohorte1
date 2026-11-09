@@ -1,230 +1,282 @@
-# Marco teórico · Sesión 8: Fundamentos de un agente de IA con LangChain
+# Marco teórico · Sesión 8: Fundamentos de agentes de IA (con LangChain)
 
-> Documento de apoyo al notebook `s08_agentes_langchain.ipynb`. Reúne las definiciones y conceptos de la sesión. No contiene código: el código y los experimentos están en el notebook.
+> Documento de apoyo al notebook `s08_agentes_langchain.ipynb`. Reúne las definiciones y conceptos de la sesión. No contiene código: el código y los experimentos están en el notebook y en la carpeta `langchain-basic` del repositorio `ai-agents-playground`.
 
 ## Índice
 
 1. [Qué es un agente](#1-qué-es-un-agente)
-2. [Agente frente a chatbot, RAG y flujo fijo](#2-agente-frente-a-chatbot-rag-y-flujo-fijo)
-3. [Tool calling (llamada a herramientas)](#3-tool-calling-llamada-a-herramientas)
-4. [Diseño de buenas herramientas](#4-diseño-de-buenas-herramientas)
-5. [LangChain: qué es y qué aporta](#5-langchain-qué-es-y-qué-aporta)
-6. [El agente de LangChain por dentro](#6-el-agente-de-langchain-por-dentro)
-7. [Salida estructurada, streaming y memoria](#7-salida-estructurada-streaming-y-memoria)
-8. [Evaluar a un agente](#8-evaluar-a-un-agente)
-9. [Riesgos y seguridad](#9-riesgos-y-seguridad)
-10. [Glosario rápido](#10-glosario-rápido)
+2. [El espectro de autonomía](#2-el-espectro-de-autonomía)
+3. [El modelo](#3-el-modelo)
+4. [Los mensajes y el estado](#4-los-mensajes-y-el-estado)
+5. [Herramientas y *tool calling*](#5-herramientas-y-tool-calling)
+6. [Diseño de buenas herramientas](#6-diseño-de-buenas-herramientas)
+7. [El prompt de sistema](#7-el-prompt-de-sistema)
+8. [El bucle](#8-el-bucle)
+9. [Límites y condiciones de parada](#9-límites-y-condiciones-de-parada)
+10. [LangChain: qué es y qué hace por ti](#10-langchain-qué-es-y-qué-hace-por-ti)
+11. [Cuándo no usar un framework](#11-cuándo-no-usar-un-framework)
+12. [Riesgos y seguridad](#12-riesgos-y-seguridad)
+13. [Cómo se evalúa un agente](#13-cómo-se-evalúa-un-agente)
+14. [Glosario rápido](#14-glosario-rápido)
 
 ---
 
 ## 1. Qué es un agente
 
-- **Agente:** sistema en el que un **modelo de lenguaje decide**, en un **bucle**, qué hacer a continuación —normalmente, **pedir que se ejecute una herramienta**— y usa el resultado para decidir el siguiente paso, hasta que puede responder.
+- **Agente de IA:** sistema en el que un **modelo de lenguaje decide**, en un **bucle**, qué hacer a continuación —normalmente, **pedir que se ejecute una herramienta**— y usa el resultado para decidir el paso siguiente, hasta cumplir un objetivo.
 
 Sus **tres piezas**:
 
-1. **Modelo:** razona y decide el siguiente paso.
-2. **Herramientas:** funciones de tu código que el modelo puede pedir que se ejecuten (consultar una API, buscar en documentos, crear un ticket).
-3. **Bucle:** *modelo → herramienta → modelo → …* hasta que el modelo responde con texto.
+| Pieza | Qué es |
+| --- | --- |
+| **Modelo** | El LLM: razona y decide el siguiente paso |
+| **Herramientas** | Funciones del código que el modelo puede pedir que se ejecuten (consultar una API, hacer un cálculo, crear un ticket) |
+| **Bucle** | *modelo → herramienta → modelo → …* hasta que el modelo responde con texto |
+
+Alrededor de ellas hay más elementos que un agente necesita para funcionar bien: **mensajes** (el estado), **prompt de sistema**, **límites** del bucle y una **traza** para entender qué pasó.
 
 Ideas relacionadas:
 
-- **Autonomía:** grado en que el sistema decide por sí mismo el camino. Un agente es más autónomo que un flujo fijo, y por eso es **más flexible y menos predecible**.
-- **Observación:** el resultado de una herramienta, que el modelo "observa" antes de decidir el siguiente paso.
-- **Paso (*turno* del bucle):** una vuelta de modelo + herramientas. Cada paso es una llamada al modelo y **cuesta**.
-- **Condición de parada:** el modelo responde con texto sin pedir más herramientas (o se alcanza un límite).
+- **Autonomía:** grado en que el sistema decide por sí mismo el camino.
+- **Observación:** el resultado de una herramienta, que el modelo "observa" antes de decidir.
+- **Paso o vuelta:** una iteración del bucle. Cada vuelta incluye al menos una llamada al modelo, y por eso **cuesta**.
 - **Harness (arnés):** todo lo que rodea al bucle del modelo: el prompt, las herramientas y las piezas que modifican su comportamiento (límites, reintentos, aprobación humana).
 
-## 2. Agente frente a chatbot, RAG y flujo fijo
+## 2. El espectro de autonomía
 
-| | Chatbot | RAG (Sesión 5) | Agente |
+No es blanco o negro: es una escala de **quién decide el camino**.
+
+| | Chatbot | Flujo fijo | Workflow con ramas | Agente |
+| --- | --- | --- | --- | --- |
+| **Quién decide los pasos** | Nadie: una respuesta | El código, siempre los mismos | El código, con condiciones | **El modelo** |
+| **Llamadas al modelo por pregunta** | Una | Pocas y fijas | Pocas y previsibles | **Varias e impredecibles** |
+| **Predecible y fácil de probar** | Mucho | Mucho | Bastante | **Poco** |
+| **Resuelve lo imprevisto** | No | No | Algo | **Sí** |
+
+- **Workflow:** sistema en el que el **código** orquesta los pasos, aunque use modelos en varios de ellos.
+- **Agente:** sistema en el que el **modelo** decide los pasos.
+
+Ideas: más autonomía permite resolver lo que no se puede prever, pero **cuesta más, tarda más y es más difícil de controlar y de probar**. La regla práctica es empezar por lo más simple que cumpla el objetivo y añadir autonomía solo donde haga falta.
+
+## 3. El modelo
+
+- **Modelo de chat:** modelo de lenguaje que recibe una lista de mensajes y devuelve un mensaje.
+- **Interfaz común:** en LangChain todos los proveedores exponen las mismas operaciones —responder completo (`invoke`), responder por trozos (`stream`) y describirle herramientas (`bind_tools`)—, por eso el resto del agente no cambia al cambiar de proveedor.
+
+Formas de obtener un modelo:
+
+| Forma | Cuándo |
+| --- | --- |
+| Texto `proveedor:modelo` | Lo más corto; configuración por defecto |
+| Función de inicialización de modelos | Cuando se necesita fijar parámetros |
+| Clase del proveedor | Cuando se necesitan opciones propias del proveedor |
+
+Parámetros estándar: modelo, llave de API (normalmente de una variable de entorno), temperatura, máximo de tokens, tiempo de espera y número de reintentos (por defecto 6, con espera creciente ante errores de red, de límite de peticiones y del servidor).
+
+- **Servidor local compatible con OpenAI:** servidores como LM Studio hablan el formato de OpenAI; se usan con la misma clase de modelo cambiando la dirección base.
+- **Tamaño del modelo:** usar herramientas es una tarea más exigente que redactar. Un modelo pequeño (≈ 3B de parámetros) suele elegir mal la herramienta, repetir llamadas o ignorar el resultado; uno de ≈ 12B o más lo hace mucho mejor. Se prueba antes de decidir.
+
+## 4. Los mensajes y el estado
+
+La conversación completa es una **lista de mensajes**. Es el **estado** de un agente durante una ejecución.
+
+| Tipo | Rol | Quién lo escribe | Contiene |
 | --- | --- | --- | --- |
-| **¿Quién decide el camino?** | Nadie: una sola llamada | El programador (flujo fijo) | El modelo, paso a paso |
-| **Datos externos** | No | Sí, siempre los mismos (búsqueda en documentos) | Los que **elija**, o ninguno |
-| **¿Puede actuar en el mundo?** | No | No | Sí, si tiene herramientas que escriben |
-| **Llamadas al modelo por pregunta** | 1 | 1 | Varias, impredecibles |
-| **Costo y latencia** | Bajos y predecibles | Bajos y predecibles | Más altos y variables |
-| **Riesgo principal** | Alucinación | Alucinación y documentos envenenados | Lo anterior + acciones equivocadas |
+| Mensaje de sistema | `system` | El desarrollador | Instrucciones fijas |
+| Mensaje humano | `user` | La persona | La pregunta |
+| Mensaje de IA | `assistant` | El **modelo** | Texto, o una petición de herramientas |
+| Mensaje de herramienta | `tool` | El **código** | El resultado de una herramienta, enlazado a su petición por un identificador |
 
-- **Flujo de trabajo (*workflow*):** pasos fijos definidos por el programador, aunque algunos usen un LLM. Un RAG es un flujo de trabajo.
-- **Cuándo usar un agente:** cuando **el camino depende de la pregunta** y no se puede programar de antemano.
-- **Cuándo no usarlo:** si el camino es conocido y siempre el mismo, el código normal o el RAG es **más barato, más rápido y más fácil de auditar**. Regla general: **usa lo más simple que resuelva el problema.**
-- **Un RAG puede ser una herramienta del agente:** el agente decide **cuándo** consultar los documentos, y cuándo no.
+Un **mensaje de IA** tiene: el texto, las **peticiones de herramientas** (cada una con nombre, argumentos e identificador; vacías si solo responde), los **bloques de contenido** en un formato estándar entre proveedores, y los **metadatos de uso** (tokens de entrada y de salida).
 
-## 3. Tool calling (llamada a herramientas)
+- **Petición de herramienta (*tool call*):** estructura que devuelve el modelo en lugar de texto: el nombre de la herramienta y sus argumentos.
+- **Estado append-only:** los mensajes solo se agregan; nunca se borran. El último mensaje es la respuesta final.
+- Los mensajes pueden escribirse como objetos o como **diccionarios** con rol y contenido; el framework los convierte.
 
-- **Tool calling / function calling:** capacidad del modelo de responder, en vez de con texto, con una **petición estructurada** (nombre de la herramienta + argumentos) para que se ejecute una función.
+## 5. Herramientas y *tool calling*
 
-Las **cuatro piezas**:
+- **Herramienta (*tool*):** función de código que el modelo puede pedir que se ejecute.
+- ***Tool calling* (llamada a herramientas):** mecanismo por el que el modelo, en lugar de responder con texto, devuelve una **petición estructurada** de ejecutar una herramienta.
 
-| # | Pieza | Quién la hace |
+**El modelo nunca ejecuta nada: solo pide.** El mecanismo tiene cuatro pasos:
+
+| Paso | Quién | Qué ocurre |
 | --- | --- | --- |
-| 1 | **Describir** las herramientas con un esquema (nombre, descripción, parámetros) | El desarrollador |
-| 2 | **Pedir** una herramienta: el modelo responde con nombre y argumentos | El modelo |
-| 3 | **Ejecutar** la función y obtener el resultado | El código del desarrollador |
-| 4 | **Devolver** el resultado al modelo y repetir | El desarrollador (el bucle) |
+| 1 | El desarrollador | Describe las herramientas al modelo (un **esquema**: nombre, descripción, parámetros) |
+| 2 | El modelo | Si necesita una, responde con una petición |
+| 3 | El código | Ejecuta la función real |
+| 4 | El desarrollador | Devuelve el resultado al modelo, que decide si pide otra o responde |
 
-**Idea central: el modelo nunca ejecuta nada.** Solo escribe una petición con la forma correcta. Si el código no la ejecuta, no pasa nada. Esa separación es **la base de la seguridad** de los agentes: quien controla el código que ejecuta, controla lo que el agente puede hacer.
+Lo único que el modelo sabe de una herramienta es:
 
-Conceptos:
-
-- **Esquema de la herramienta (*tool schema*):** descripción en formato JSON Schema de lo que la herramienta hace y de los argumentos que acepta. Es **todo** lo que el modelo sabe de ella.
-- **Petición de herramienta (*tool call*):** la respuesta del modelo que pide ejecutar una herramienta, con un identificador.
-- **Resultado de herramienta (*tool result*):** lo que el código devuelve al modelo, enlazado con el identificador de la petición.
-- **Llamadas en paralelo:** el modelo puede pedir **varias herramientas a la vez** cuando las consultas son independientes.
-- **El historial crece:** el modelo no tiene memoria propia; en cada vuelta se **reenvía** la conversación completa (pregunta, peticiones y resultados). Por eso **los tokens de entrada de un agente se acumulan** y por eso cuesta más que un chatbot.
-- **Formatos por proveedor:** cada proveedor expresa estas piezas de forma distinta (por ejemplo, los argumentos llegan como texto JSON en un formato y como objeto en otro; los resultados vuelven como un tipo de mensaje distinto). Un framework puede **unificarlos**.
-- **Formato estricto:** la petición debe respetar un formato; los modelos pequeños fallan a veces en esto, y un servidor puede **rechazar** la salida del modelo.
-
-## 4. Diseño de buenas herramientas
-
-> **Una herramienta es un prompt disfrazado de función.** El modelo decide usarla leyendo solo su **nombre, descripción y parámetros**.
-
-| Aspecto | Buena práctica | Mal ejemplo |
+| Parte | Origen en LangChain | Para qué la usa el modelo |
 | --- | --- | --- |
-| **Nombre** | Verbo + objeto: `estado_servicio` | `api2`, `datos` |
-| **Descripción** | Qué hace, **cuándo usarla y cuándo no** | "Hace cosas" |
-| **Parámetros** | Tipados, con descripción y valores válidos | Sin tipo ni descripción |
-| **Resultado** | Corto y legible | Volcar miles de líneas |
-| **Errores** | Texto que explica **cómo corregir** | Un *traceback* o un valor vacío |
-| **Efectos** | Separar **leer** de **escribir**; la que escribe es **idempotente** | Una herramienta que lee y modifica |
-| **Cantidad** | Pocas y distintas entre sí | Muchas, parecidas |
+| **Nombre** | Nombre de la función | Elegir cuál usar |
+| **Descripción** | *Docstring* de la función | Saber qué hace y cuándo usarla |
+| **Parámetros** | *Type hints* de la firma (obligatorios) | Saber qué argumentos pedir y de qué tipo |
 
-Conceptos:
+Por eso una herramienta es, en la práctica, **un prompt disfrazado de función**. El **esquema** que se envía es un JSON; su forma cambia entre proveedores, pero el contenido es el mismo.
 
-- **Herramienta de lectura:** consulta sin modificar nada. Bajo riesgo.
-- **Herramienta de escritura (con efectos):** modifica el mundo (crea un ticket, envía un correo). Requiere más cuidado.
-- **Idempotencia:** repetir la acción con los mismos datos **no cambia el resultado** (no se duplican tickets). Importa porque los modelos **reintentan y se repiten**.
-- **Errores esperados vs. inesperados:** los esperados (un servicio que no existe) se devuelven como **texto legible** para que el modelo se corrija; los inesperados (se cayó la base de datos) se manejan con reintentos o mensajes seguros.
-- **Validación de argumentos:** se valida contra el esquema antes de ejecutar; los argumentos inválidos se devuelven al modelo como error. La validación **de negocio** (valores permitidos, longitudes) debe hacerse en el código, no confiarse al prompt.
-- **Exceso de herramientas:** cada herramienta añade tokens al prompt y más opciones para confundirse.
+- **Llamadas en paralelo:** un modelo puede pedir varias herramientas en un mismo mensaje.
+- **Tipos de resultado de una herramienta:** texto, datos estructurados, bloques de contenido (por ejemplo, imágenes) o una actualización del estado del agente.
 
-## 5. LangChain: qué es y qué aporta
+## 6. Diseño de buenas herramientas
 
-- **LangChain:** *framework* de código abierto para construir aplicaciones con LLM.
-
-Lo que aporta:
-
-| Aporta | En palabras simples |
+| Criterio | Regla |
 | --- | --- |
-| **Interfaz común de modelos** | Los modelos de distintos proveedores se usan igual: se cambia de proveedor sin reescribir el agente |
-| **Definición de herramientas** | Convierte una función (nombre, descripción, tipos) en una herramienta con esquema y validación |
-| **Mensajes estándar** | Un mismo formato para el usuario, el modelo y los resultados de herramientas |
-| **Constructor de agentes** | El bucle ya hecho, con límites y manejo de errores |
-| **Middleware** | Piezas que se añaden al bucle: límites, reintentos, aprobación humana, resumen del historial |
-| **Salida estructurada, streaming, memoria** | Capacidades integradas |
+| **Nombre** | Claro y específico, en `snake_case` (letras, números, guion bajo y guion para ser compatible con los proveedores) |
+| **Descripción** | Qué hace, cuándo usarla y cuándo no; breve e informativa |
+| **Parámetros** | Pocos, tipados, con valores válidos nombrados |
+| **Resultado** | Corto: todo lo que devuelve entra al contexto y cuesta tokens |
+| **Errores** | Un texto legible que diga qué corregir, en lugar de una excepción cruda; así el modelo puede reintentar |
+| **Efectos** | Separar las que solo leen de las que modifican algo; estas últimas requieren más control |
+| **Cantidad** | Pocas y bien diseñadas: demasiadas herramientas parecidas confunden al modelo y aumentan los errores |
 
-**Los paquetes** (una fuente habitual de confusión):
+- **Idempotencia:** ejecutar una herramienta dos veces produce el mismo efecto que una. Importa porque los agentes repiten llamadas.
+- **Solo lectura primero:** las herramientas que consultan son más seguras que las que modifican.
 
-| Paquete | Para qué |
+## 7. El prompt de sistema
+
+- **Prompt de sistema:** instrucciones fijas que acompañan a toda la conversación.
+
+Qué conviene incluir: el **rol**, **cuándo usar herramientas**, **qué no hacer** (por ejemplo, no inventar datos), el **formato y tono** de la respuesta y los **límites** (por ejemplo, nunca modificar algo sin confirmación).
+
+- En un agente importa más que en un chatbot, porque además de responder el modelo **decide acciones**.
+- **No es una barrera de seguridad:** orienta al modelo pero no garantiza nada. Un texto malicioso que llegue por una herramienta puede intentar contradecirlo. Los límites que importan se imponen **en el código**.
+
+## 8. El bucle
+
+El bucle es el corazón del agente:
+
+1. Se llama al modelo con los mensajes.
+2. Si responde **con texto** (sin peticiones), **terminó**.
+3. Si **pide herramientas**, el código las ejecuta y agrega cada resultado a los mensajes.
+4. Se vuelve al paso 1.
+
+- **ReAct (*Reason + Act*):** patrón en el que el modelo alterna **razonar** qué hacer, **actuar** (pedir una herramienta) y **observar** el resultado.
+- **Costo del bucle:** cada vuelta es una llamada al modelo. Un agente hace varias por pregunta: el costo, la latencia y el riesgo se multiplican respecto a un flujo fijo.
+- **Traza:** la lista de mensajes de una ejecución, en orden. Es la forma de entender **por qué** el agente respondió lo que respondió.
+
+## 9. Límites y condiciones de parada
+
+Un bucle necesita saber cuándo terminar.
+
+| Cómo termina | Significado |
 | --- | --- |
-| **langchain** | La capa de alto nivel: el constructor de agentes y el middleware |
-| **langchain-core** | Las abstracciones base: mensajes, herramientas, modelos |
-| **langgraph** | El **motor** debajo del agente: un grafo de pasos con persistencia y pausas |
-| **Integraciones por proveedor** | Un paquete por proveedor (Anthropic, OpenAI…) |
-| **langchain-classic** | La API antigua (ejecutores de agentes, cadenas). Ya no se usa en proyectos nuevos |
-| **LangSmith** | Servicio **opcional** de observabilidad: ver las trazas de cada ejecución |
+| **Respuesta con texto** | Terminó bien: el modelo ya no pidió herramientas |
+| **Límite de pasos** | Se alcanzó el máximo de pasos del grafo interno sin terminar; el framework lanza un error de recursión |
+| **Freno propio** | Un límite de llamadas a herramientas, un presupuesto de tokens o de dinero, un tiempo máximo, o la detección de falta de progreso (repetir la misma llamada) |
 
-- **Versionado y obsolescencia:** el ecosistema cambió de forma importante con la versión 1.0; muchos tutoriales anteriores usan una API reemplazada. Conviene **comprobar la fecha** de cualquier tutorial y **fijar las versiones** del proyecto.
-- **Cuándo no usarlo:** una sola llamada al modelo (basta el SDK del proveedor); necesidad de control total del bucle; máxima estabilidad. Vale la pena cuando se usan **varias de sus piezas a la vez**.
-- **Servidores compatibles:** un servidor local (LM Studio, Ollama, vLLM…) que hable el formato de OpenAI se usa con la integración de OpenAI indicando la dirección del servidor.
+- **Límite de pasos:** cuenta pasos del grafo interno; cada llamada al modelo y cada ejecución de herramientas suman uno. Con un límite de 8 caben unas 4 vueltas del modelo.
+- Sin límites, un agente confundido puede repetir sin fin, y **cada vuelta se cobra**.
+- **Criterio de salida:** definir qué significa "terminado" es parte del diseño del agente; no se confía solo en que el modelo lo declare.
 
-## 6. El agente de LangChain por dentro
+Otras piezas del agente, que se estudian más adelante en el curso:
 
-**Qué hace el constructor de agentes** en cada pregunta:
+| Pieza | Qué es |
+| --- | --- |
+| **Memoria de corto plazo** | Que el agente recuerde entre turnos: requiere guardar el estado (*checkpointer*) y un identificador de conversación; el de memoria sirve para aprender, en producción se usa uno persistente |
+| **Salida estructurada** | Que la respuesta final sea un dato validado (un modelo de datos) en lugar de texto libre |
+| ***Streaming*** | Ver la ejecución mientras ocurre |
+| **Middleware** | Piezas que modifican el bucle sin reescribirlo: reintentos, enmascarar datos personales, aprobación humana, resumir la conversación |
 
-1. Llama al modelo con la conversación y los esquemas de las herramientas.
-2. Si la respuesta trae **peticiones de herramienta**, las **ejecuta** (validando los argumentos).
-3. Agrega cada resultado a la conversación como un **mensaje de herramienta**.
-4. **Vuelve a llamar** al modelo con todo el historial.
-5. Si el modelo responde **sin peticiones**, termina.
+## 10. LangChain: qué es y qué hace por ti
 
-Conceptos:
+- **LangChain:** framework de código abierto para construir aplicaciones con modelos de lenguaje. Aporta una **interfaz común de modelos**, el decorador de herramientas, un **formato estándar de mensajes**, la función **`create_agent`** y el **middleware**.
+- **`create_agent`:** recibe un modelo, herramientas y un prompt, y devuelve un agente con el bucle ya hecho.
 
-- **Estado del agente:** la lista de mensajes de la conversación (y, opcionalmente, otros campos). Al terminar, contiene toda la **traza**.
-- **Tipos de mensaje:** del usuario, del modelo (puede incluir peticiones de herramienta) y de herramienta (lleva el identificador de la petición a la que responde).
-- **Traza:** el registro completo de una ejecución: qué pidió el modelo, qué devolvió cada herramienta, qué respondió. Es la herramienta principal para **depurar y auditar**.
-- **Límite de pasos:** número máximo de pasos antes de cortar la ejecución. **Protege contra bucles que nunca terminan** y que gastan dinero.
-- **Manejo de peticiones erróneas:** si el modelo pide una herramienta que no existe o con argumentos inválidos, el agente **no se cae**: devuelve al modelo un mensaje de error para que se corrija.
-- **Middleware:** piezas que se enganchan al bucle. Ejemplos: limitar el número de llamadas a una herramienta, devolver mensajes de error seguros, reintentar, pedir aprobación humana antes de una acción, resumir el historial.
-- **Modelo de juguete (*fake model*):** un "modelo" que devuelve respuestas de un guion. Permite **ver y probar el bucle sin un LLM real** (y sin gastar); es la forma habitual de probar agentes.
-- **Identificador del modelo:** el modelo puede indicarse con un texto "proveedor:modelo" o con un objeto de modelo ya configurado (necesario para parámetros especiales o servidores locales).
+Qué hace `create_agent` por ti: describe las herramientas al modelo, ejecuta el bucle, valida los argumentos, aplica un límite de pasos, mantiene los mensajes como estado y traduce entre formatos de proveedores.
 
-## 7. Salida estructurada, streaming y memoria
+| Parámetro de `create_agent` | Para qué sirve |
+| --- | --- |
+| Modelo | Texto `proveedor:modelo` u objeto de modelo |
+| Herramientas | La lista de herramientas |
+| Prompt de sistema | Texto o mensaje de sistema |
+| Formato de respuesta | Salida estructurada |
+| Checkpointer | Memoria entre turnos |
+| Middleware | Modificar el bucle |
+| Esquemas de estado y de contexto | Estado propio y datos por ejecución |
+| Nombre | Identificador, útil si el agente es parte de otro |
 
-**Salida estructurada**
+Paquetes del ecosistema:
 
-- **Salida estructurada:** que el agente devuelva un **objeto validado contra un esquema** (por ejemplo, un modelo de Pydantic) en vez de texto libre. Útil cuando otro sistema consume el resultado.
-- **Estrategias:** usar la **función nativa** del proveedor si existe, o, si no, una **herramienta adicional** que el modelo "llama" para entregar el resultado con el formato pedido.
-- Es la misma idea de "pedir JSON y validar" de la Sesión 3, integrada en el bucle.
+| Paquete | Qué es |
+| --- | --- |
+| `langchain` | API de alto nivel: agentes, modelos, herramientas, mensajes, middleware |
+| `langchain-core` | Abstracciones base |
+| `langgraph` | **Por debajo**: ejecuta el agente como un **grafo con estado** (nodos, aristas y ciclos); se usa directamente para flujos a medida |
+| `langchain-anthropic`, `langchain-openai`, … | Un paquete por proveedor |
+| `langsmith` | Servicio de trazas y evaluación (opcional) |
+| `langchain-classic` | Interfaces antiguas conservadas por compatibilidad |
 
-**Streaming**
+**Cambios de la versión 1.0.** Muchos tutoriales anteriores usan interfaces reemplazadas:
 
-- **Streaming:** recibir el resultado **a medida que se produce**, en lugar de esperar al final.
-- **Dos niveles:** por **pasos** del agente (qué nodo corrió y qué produjo) y por **texto** (token a token).
-- Mejora la **sensación de velocidad**: un agente puede tardar varios segundos.
+| Antes de la 1.0 | Hoy |
+| --- | --- |
+| `AgentExecutor`, `initialize_agent` | `create_agent` |
+| `create_react_agent` de `langgraph.prebuilt` | `create_agent` |
+| `LLMChain` | Componer modelos directamente |
+| Mensajes desde `langchain.schema` | Mensajes desde `langchain.messages` |
 
-**Memoria**
+## 11. Cuándo no usar un framework
 
-- **Por defecto, un agente no recuerda:** cada pregunta empieza de cero.
-- **Checkpointer:** componente que **guarda el estado** del agente entre turnos. Con un **identificador de hilo (*thread id*)**, la misma conversación recuerda lo anterior; otro hilo es otra conversación.
-- **Memoria de corto plazo:** lo que se recuerda **dentro** de una conversación.
-- **Memoria de largo plazo:** lo que se recuerda **entre** conversaciones (otro tema, de la próxima semana).
-- **Persistencia:** un checkpointer en memoria se pierde al reiniciar; en producción se respalda con una **base de datos** (por ejemplo, PostgreSQL).
-- **El historial cuesta:** como se reenvía completo, una conversación larga **cuesta cada vez más**. Se recorta o se **resume** el historial.
+| Situación | Alternativa |
+| --- | --- |
+| Una sola llamada al modelo | El SDK del proveedor basta |
+| Se quiere control total del bucle | Escribirlo a mano son unas veinte líneas |
+| Se necesita estabilidad máxima | Un framework que evoluciona rápido es una dependencia que se vigila: **fijar las versiones** |
 
-## 8. Evaluar a un agente
+## 12. Riesgos y seguridad
 
-- **Evaluar la elección de herramientas:** con preguntas fijas, comprobar qué herramientas llamó el agente y compararlas con las esperadas. Es la misma idea de las Sesiones 3 y 5: **medir con casos fijos, no "a ojo"**.
-- **Herramientas "deben" y "permitidas":** las que **tienen** que llamarse y las que no estorban. **Llamar herramientas de más también es un fallo**: cuesta dinero y tiempo y, si la herramienta escribe, puede hacer daño.
-- **Un agente también debe saber cuándo NO usar herramientas** (un saludo, una cuenta simple).
-- **El modelo importa mucho:** con el mismo código y las mismas herramientas, un modelo pequeño (3B parámetros) y uno mediano (~12B) dieron agentes muy distintos: el pequeño llama herramientas sin necesidad, repite llamadas y malinterpreta resultados.
-- **Tres habilidades de usar herramientas:** (1) **decidir** si hace falta una y cuál; (2) escribir la petición en el **formato estricto**; (3) **leer el resultado** y usarlo. Los modelos pequeños fallan sobre todo en la primera y la tercera.
-- **Elegir con datos propios:** antes de elegir un modelo para un agente, evaluarlo con **tus** herramientas y **tus** preguntas.
-- **Variabilidad:** con pocas preguntas y modelos no totalmente deterministas, los números son orientativos; la comparación sirve para decidir, no para prometer exactitud.
-- **Costo de un agente:** suma de **todas** las llamadas al modelo de la ejecución, cada una con el historial acumulado. Se mide sumando los tokens reales.
+Un agente **ejecuta**, y por eso el riesgo es distinto al de un chatbot.
 
-## 9. Riesgos y seguridad
-
-| Riesgo | Qué pasa | Defensa |
+| Riesgo | Qué es | Defensa |
 | --- | --- | --- |
-| **Acción no pedida** | Un modelo débil llama a una herramienta que escribe sin que se lo pidan | **Mínimo privilegio**; descripción que limita el uso |
-| **Acción repetida** | Los modelos reintentan y se repiten | Herramientas **idempotentes** |
-| **Inyección indirecta** | Un resultado de herramienta o un documento contiene órdenes dirigidas al asistente | Tratar todo resultado como **dato no confiable**; mínimo privilegio; aprobación humana |
-| **Bucle sin fin** | El modelo repite llamadas indefinidamente y gasta dinero | **Límite de pasos** y de llamadas por herramienta |
-| **Argumentos peligrosos** | El modelo pide una acción con valores peligrosos | **Validar en el código**, con listas de valores permitidos |
-| **Falla inesperada** | Una herramienta falla a mitad del bucle | Reintentos y **mensajes seguros** |
-| **Fuga por errores** | Un mensaje de error revela detalles internos (servidores, usuarios) | Devolver mensajes genéricos al modelo y al usuario |
+| **Acción no pedida** | El modelo ejecuta algo que nadie le pidió | Confirmar antes de actuar (aprobación humana) |
+| **Acción repetida** | Reintenta y duplica un efecto | Herramientas idempotentes |
+| **Inyección indirecta** | Un texto que llega por una herramienta contiene instrucciones y el modelo las obedece | Tratar todo resultado como **datos, no órdenes**; limitar lo que el agente puede hacer |
+| **Bucle sin fin** | Repite sin avanzar | Límite de pasos y de presupuesto |
+| **Argumentos peligrosos** | El modelo inventa o manipula un parámetro | Validar en el código; nunca confiar |
+| **Falla inesperada** | Una herramienta falla | Errores legibles y reintentos controlados |
 
-Conceptos:
+- **Mínimo privilegio:** el agente solo debe tener las herramientas que necesita; las que modifican algo, con aprobación humana. La seguridad no puede depender de que el modelo "se porte bien".
 
-- **Mínimo privilegio:** dar al agente **solo las herramientas que necesita**. Un agente de solo lectura **no puede** hacer daño con una escritura aunque el modelo lo "quiera". Es la defensa **más barata y robusta**, porque **no depende del modelo**.
-- **Inyección indirecta de instrucciones:** órdenes maliciosas escondidas en datos que el agente lee (documentos o resultados de herramientas). Con herramientas es **más grave** que en un RAG: el agente puede **actuar** sobre ellas.
-- **Que el modelo resista hoy no lo hace seguro:** un modelo capaz suele resistir, uno pequeño suele caer; los ataques mejoran y los modelos cambian.
-- **Defensa en profundidad:** combinar varias barreras (mínimo privilegio, aprobación humana, validación, registro de la traza, límites), sabiendo que **ninguna es perfecta**.
-- **Aprobación humana (*human in the loop*):** pausar el agente antes de una acción con efectos y esperar la confirmación de una persona.
-- **Registro (*logging*) de la traza:** guardar qué pidió el modelo y qué se ejecutó, para auditar.
-- **Superficie de ataque:** cada herramienta y cada fuente de datos que el agente lee es un punto por donde puede entrar una orden no deseada.
+## 13. Cómo se evalúa un agente
 
-## 10. Glosario rápido
+Se mide, y por capas:
 
-| Término | Definición breve |
+| Capa | Pregunta |
 | --- | --- |
-| **Agente** | Modelo que, en un bucle, pide herramientas y lee sus resultados hasta poder responder |
-| **Herramienta (*tool*)** | Función del código que el modelo puede pedir que se ejecute |
-| **Tool calling / function calling** | Respuesta del modelo con una petición de herramienta en vez de texto |
-| **Esquema de la herramienta** | Descripción (nombre, descripción, parámetros) que recibe el modelo |
-| **Bucle del agente** | *Modelo → herramienta → modelo* hasta responder con texto |
-| **Mensaje de herramienta** | Resultado de una herramienta, enlazado con la petición del modelo |
-| **Traza** | Registro completo de una ejecución del agente |
-| **Límite de pasos** | Máximo de pasos antes de cortar el agente |
-| **Middleware** | Pieza que se engancha al bucle (límites, reintentos, aprobación) |
-| **Checkpointer / hilo** | Mecanismo de memoria del agente y su identificador de conversación |
-| **Salida estructurada** | Resultado validado contra un esquema, no texto libre |
-| **Streaming** | Recibir pasos o texto a medida que se producen |
-| **Idempotente** | Repetir la acción no cambia el resultado |
-| **Mínimo privilegio** | Dar solo los permisos y herramientas necesarios |
-| **Inyección indirecta** | Órdenes ocultas en datos que el agente lee |
-| **Modelo de juguete** | "Modelo" con respuestas de guion, para ver y probar el bucle sin LLM |
-| **LangGraph** | Motor de grafos sobre el que corre el agente de LangChain |
-| **LangSmith** | Servicio opcional de observabilidad |
+| **Elección de herramienta** | ¿Llamó a la correcta? ¿A ninguna cuando no hacía falta? |
+| **Argumentos** | ¿Eran correctos y válidos? |
+| **Trayectoria** | ¿Cuántos pasos dio? ¿Repitió llamadas? ¿Se desvió? |
+| **Resultado** | ¿La respuesta final es correcta y está respaldada por lo que devolvieron las herramientas? |
+| **Costo y tiempo** | ¿Cuántas llamadas al modelo y cuántos tokens por pregunta? |
+
+- La **traza** es la materia prima de la evaluación.
+- El **tamaño del modelo** pesa mucho: con las mismas herramientas y preguntas, un modelo pequeño elige peor.
+
+## 14. Glosario rápido
+
+| Término | Definición |
+| --- | --- |
+| **Agente** | Sistema donde un modelo decide, en un bucle, qué herramientas usar |
+| **Workflow** | Sistema donde el código orquesta los pasos |
+| **Herramienta (*tool*)** | Función de código que el modelo puede pedir que se ejecute |
+| ***Tool calling*** | Mecanismo por el que el modelo devuelve una petición estructurada de herramienta |
+| **Petición de herramienta** | Nombre y argumentos que el modelo pide ejecutar |
+| **Esquema de herramienta** | Descripción (nombre, descripción, parámetros) que recibe el modelo |
+| **Mensaje** | Unidad de la conversación: sistema, humano, IA o herramienta |
+| **Estado** | Los mensajes acumulados de una ejecución |
+| **Prompt de sistema** | Instrucciones fijas de toda la conversación |
+| **Bucle / ReAct** | Razonar, actuar y observar, repetido hasta responder |
+| **Paso** | Una vuelta del bucle |
+| **Límite de pasos** | Máximo de pasos antes de cortar la ejecución |
+| **`create_agent`** | Función de LangChain que arma el agente completo |
+| **LangGraph** | Biblioteca de grafos con estado sobre la que corre el agente |
+| **Middleware** | Pieza que modifica el bucle sin reescribirlo |
+| **Checkpointer** | Componente que guarda el estado para dar memoria entre turnos |
+| **Traza** | La lista de mensajes de una ejecución, en orden |
+| **Idempotente** | Que ejecutarlo varias veces equivale a ejecutarlo una |
+| **Inyección indirecta** | Instrucciones ocultas en un texto que llega por una herramienta |
+| **Mínimo privilegio** | Dar al agente solo las herramientas imprescindibles |

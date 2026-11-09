@@ -59,9 +59,10 @@ Estimaciones calculadas con las llamadas del notebook y de las prácticas. Tu ga
 | S4 · Embeddings y bases vectoriales | 0 con embeddings locales | US$ 0 (con embeddings de OpenAI: < US$ 0.001) | US$ 0 (con OpenAI: fracciones de centavo) |
 | S5 · Fundamentos de RAG | ~25 al LLM (con modelo de proveedor); +14 por cada proveedor extra que compares | < US$ 0.02 (US$ 0 con `RAG_PROVIDER=local`) | ≈ US$ 0.0005 por pregunta |
 | S6 · RAG intermedio | ~30 al LLM en las partes 8 a 10 (con modelo de proveedor) | < US$ 0.02 (US$ 0 con modelo local) | US$ 0 (el laboratorio de chunking no llama al LLM) |
-| S7 · RAG avanzado y evaluación | descomposición, HyDE, generación y juez (con modelo de proveedor) | < US$ 0.15, cota superior (US$ 0 con modelo local) | ≈ US$ 0.0005 por pregunta evaluada; el juez suma otra llamada por pregunta |
-| S8 · Agentes con LangChain | un agente hace varias llamadas por pregunta | < US$ 0.03 (US$ 0 con modelo local) | ≈ US$ 0.0005 a 0.002 por pregunta |
-| S9 a S14 | _Se publicará en cada sesión_ | | |
+| S7 · RAG avanzado y GraphRAG | partes con generación, juez y extracción (con un proveedor) | < US$ 0.15 en total, cota superior (US$ 0 con modelo local) | La implementación (`rag-playground/rag-avanzado`) usa tu modelo local o de proveedor: centavos por sesión de prueba |
+| S8 · Fundamentos de agentes (LangChain) | partes 2 y siguientes con un proveedor | < US$ 0.03 (US$ 0 con modelo local) | ≈ US$ 0.002 por pregunta en `langchain-basic` (un agente hace varias llamadas); US$ 0 con modelo local o `fake` |
+| S9 · LangChain y RAG agéntico | ninguna obligatoria; una celda opcional de modelo real | ≈ US$ 0.001 con un proveedor | menos de un centavo por pregunta en `langchain-agentic-rag` |
+| S10 a S15 | _Se publicará en cada sesión_ | | |
 
 ## Cómo vas a reconocer lo que cuesta dinero
 

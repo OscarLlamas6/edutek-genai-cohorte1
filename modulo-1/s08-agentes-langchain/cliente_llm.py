@@ -90,7 +90,7 @@ PRECIOS: dict[str, tuple[float, float]] = {
 
 def proveedor_activo() -> str:
     """Proveedor elegido con la variable de entorno LLM_PROVIDER (por defecto, anthropic)."""
-    p = os.getenv("LLM_PROVIDER", "anthropic").strip().lower()
+    p = os.getenv("LLM_PROVIDER", "openai").strip().lower()
     if p not in PROVEEDORES:
         raise ValueError(f"LLM_PROVIDER='{p}' no es válido. Usa uno de: {', '.join(PROVEEDORES)}.")
     return p

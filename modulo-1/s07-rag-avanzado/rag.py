@@ -149,7 +149,7 @@ def construir_prompt(pregunta: str, resultados: list[Resultado], version: str = 
 
 
 def proveedor_generacion(preferido: str | None = None) -> str:
-    p = (preferido or os.getenv("RAG_PROVIDER") or os.getenv("LLM_PROVIDER", "anthropic")).strip().lower()
+    p = (preferido or os.getenv("RAG_PROVIDER") or os.getenv("LLM_PROVIDER", "openai")).strip().lower()
     if p not in PROVEEDORES_GENERACION:
         raise ValueError(f"Proveedor '{p}' no válido. Usa: {', '.join(PROVEEDORES_GENERACION)}.")
     return p

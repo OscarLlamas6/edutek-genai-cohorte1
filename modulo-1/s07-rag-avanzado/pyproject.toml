@@ -1,7 +1,7 @@
 [project]
 name = "s07-rag-avanzado"
 version = "0.1.0"
-description = "Sesión 7 · RAG avanzado: técnicas, GraphRAG y evaluación"
+description = "Sesión 7 · RAG avanzado y GraphRAG"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [

@@ -34,6 +34,17 @@
 | `datos/` | Manual de "Andes Fibra"; `golden_set.json` (24 preguntas); `etiquetas_juez.json` (21 respuestas etiquetadas por una persona); catálogo de servicios de TI, su grafo curado y 8 preguntas multi-salto; `preguntas_media.json` (16 preguntas en español sobre audio y video) y `cache_semantica.json` (paráfrasis y preguntas casi iguales para la caché). `datos/media/` (carpeta **ignorada por Git**) es donde el instructor deja el MP3 y el MP4 de la clase |
 | `pyproject.toml`, `uv.lock`, `.python-version` | Entorno de la sesión (**Python 3.12**); el grupo opcional `media` añade `faster-whisper` y `av<16` |
 
+## Implementación en `rag-playground`
+
+La implementación de los conceptos de esta sesión está en el proyecto **`rag-avanzado`** del repositorio [`rag-playground`](https://github.com/OscarLlamas6/rag-playground) (GraphRAG con PostgreSQL + pgvector, comunidades, descomposición con RRF, frase de contexto y evaluación). Proveedor de LLM por defecto: **OpenAI**, con soporte para Anthropic y LM Studio (`LLM_PROVIDER`).
+
+```bash
+cd ../../../rag-playground/rag-avanzado
+task install && task db:up
+task backend      # terminal 1 → http://localhost:8020/docs
+task web          # terminal 2 → http://localhost:8082
+```
+
 ## Requisitos
 
 | | |
