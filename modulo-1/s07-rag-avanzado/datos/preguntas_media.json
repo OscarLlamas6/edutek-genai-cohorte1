@@ -1,165 +1,165 @@
 {
- "_nota": "Preguntas en español sobre dos medios en INGLÉS (de terceros, no incluidos en el repositorio). 'esperado' = [segundo_inicio, segundo_fin] del tramo donde está la respuesta; un acierto es que la ventana recuperada se solape con ese tramo. Los tiempos se tomaron de una transcripción con Whisper 'small'.",
- "preguntas": [
-  {
-   "id": "T1",
-   "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
-   "pregunta": "¿Qué porcentaje de los desarrolladores usa Copilot y cuántos de ellos aceptan el resultado sin cambios?",
-   "esperado": [
-    180,
-    192
-   ],
-   "respuesta_esperada": "55 % lo usa y solo 30 % acepta el resultado sin cambios."
-  },
-  {
-   "id": "T2",
-   "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
-   "pregunta": "¿Con qué tipo de empleado compara el orador a la inteligencia artificial dentro de un equipo?",
-   "esperado": [
-    227,
-    236
-   ],
-   "respuesta_esperada": "Con un desarrollador junior brillante."
-  },
-  {
-   "id": "T3",
-   "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
-   "pregunta": "¿Qué aplicación le pidió el orador a ChatGPT que creara y qué fue lo único que no hizo?",
-   "esperado": [
-    128,
-    151
-   ],
-   "respuesta_esperada": "Una app de citas como Tinder en Python; no le consiguió una cita."
-  },
-  {
-   "id": "T4",
-   "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
-   "pregunta": "¿Qué fundamentos recomienda dominar a quienes estudian ingeniería de software?",
-   "esperado": [
-    566,
-    580
-   ],
-   "respuesta_esperada": "Estructuras de datos, algoritmos y conceptos de programación."
-  },
-  {
-   "id": "T5",
-   "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
-   "pregunta": "¿Qué dijo el director ejecutivo de GitHub sobre el futuro de la programación?",
-   "esperado": [
-    25,
-    35
-   ],
-   "respuesta_esperada": "Que el futuro de la programación es el lenguaje natural."
-  },
-  {
-   "id": "T6",
-   "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
-   "pregunta": "¿Cuáles son las razones por las que los ingenieros de software siguen siendo esenciales?",
-   "esperado": [
-    382,
-    446
-   ],
-   "respuesta_esperada": "Entienden mejor la IA, la usan mejor para construir software y hacen mejor a la IA."
-  },
-  {
-   "id": "T7",
-   "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
-   "pregunta": "¿Qué tarea aburrida dice con humor que nos queda a los humanos?",
-   "esperado": [
-    270,
-    280
-   ],
-   "respuesta_esperada": "Manejar la política de la oficina."
-  },
-  {
-   "id": "T8",
-   "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
-   "pregunta": "¿Por qué dice que el ingeniero del futuro debe ser full stack?",
-   "esperado": [
-    598,
-    616
-   ],
-   "respuesta_esperada": "Porque ya no basta con especializarse solo en el frontend, el backend o la base de datos."
-  },
-  {
-   "id": "V1",
-   "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
-   "pregunta": "¿Cuánto más cuesta una filtración de datos cuando hay IA en la sombra?",
-   "esperado": [
-    80,
-    95
-   ],
-   "respuesta_esperada": "670 000 dólares más."
-  },
-  {
-   "id": "V2",
-   "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
-   "pregunta": "¿Cuántos deepfakes se catalogaron en 2023 y cuántos en 2025?",
-   "esperado": [
-    152,
-    169
-   ],
-   "respuesta_esperada": "Unos 500 000 en 2023 y 8 millones en 2025."
-  },
-  {
-   "id": "V3",
-   "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
-   "pregunta": "¿Qué puesto ocupa la inyección de prompts en la lista de OWASP para modelos de lenguaje?",
-   "esperado": [
-    253,
-    274
-   ],
-   "respuesta_esperada": "El primero, en 2023 y otra vez en 2025."
-  },
-  {
-   "id": "V4",
-   "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
-   "pregunta": "¿Qué es un ataque de cero clics con inyección de prompt indirecta contra un agente?",
-   "esperado": [
-    509,
-    532
-   ],
-   "respuesta_esperada": "Un correo con instrucciones ocultas que el agente lee y obedece, sin que el usuario haga nada."
-  },
-  {
-   "id": "V5",
-   "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
-   "pregunta": "¿Qué porcentaje de las cuentas es elegible para passkeys según la alianza FIDO?",
-   "esperado": [
-    1066,
-    1080
-   ],
-   "respuesta_esperada": "93 %."
-  },
-  {
-   "id": "V6",
-   "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
-   "pregunta": "¿Cuántas passkeys tiene el orador guardadas en su gestor de contraseñas?",
-   "esperado": [
-    1110,
-    1124
-   ],
-   "respuesta_esperada": "17."
-  },
-  {
-   "id": "V7",
-   "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
-   "pregunta": "¿Qué confesión hace el orador al final del video?",
-   "esperado": [
-    1139,
-    1160
-   ],
-   "respuesta_esperada": "Que construyó una máquina del tiempo y encontró el informe del futuro (es una broma)."
-  },
-  {
-   "id": "V8",
-   "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
-   "pregunta": "¿Qué problema puede causar la computación cuántica a la criptografía actual?",
-   "esperado": [
-    340,
-    362
-   ],
-   "respuesta_esperada": "Que en algún momento podrá romper toda la criptografía actual."
-  }
- ]
+    "_nota": "Preguntas en español sobre dos medios en INGLÉS (de terceros, no incluidos en el repositorio). 'esperado' = [segundo_inicio, segundo_fin] del tramo donde está la respuesta; un acierto es que la ventana recuperada se solape con ese tramo. Los tiempos se tomaron de una transcripción con Whisper 'small'.",
+    "preguntas": [
+        {
+            "id": "T1",
+            "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
+            "pregunta": "¿Qué porcentaje de los desarrolladores usa Copilot y cuántos de ellos aceptan el resultado sin cambios?",
+            "esperado": [
+                180,
+                192
+            ],
+            "respuesta_esperada": "55 % lo usa y solo 30 % acepta el resultado sin cambios."
+        },
+        {
+            "id": "T2",
+            "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
+            "pregunta": "¿Con qué tipo de empleado compara el orador a la inteligencia artificial dentro de un equipo?",
+            "esperado": [
+                227,
+                236
+            ],
+            "respuesta_esperada": "Con un desarrollador junior brillante."
+        },
+        {
+            "id": "T3",
+            "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
+            "pregunta": "¿Qué aplicación le pidió el orador a ChatGPT que creara y qué fue lo único que no hizo?",
+            "esperado": [
+                128,
+                151
+            ],
+            "respuesta_esperada": "Una app de citas como Tinder en Python; no le consiguió una cita."
+        },
+        {
+            "id": "T4",
+            "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
+            "pregunta": "¿Qué fundamentos recomienda dominar a quienes estudian ingeniería de software?",
+            "esperado": [
+                566,
+                580
+            ],
+            "respuesta_esperada": "Estructuras de datos, algoritmos y conceptos de programación."
+        },
+        {
+            "id": "T5",
+            "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
+            "pregunta": "¿Qué dijo el director ejecutivo de GitHub sobre el futuro de la programación?",
+            "esperado": [
+                25,
+                35
+            ],
+            "respuesta_esperada": "Que el futuro de la programación es el lenguaje natural."
+        },
+        {
+            "id": "T6",
+            "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
+            "pregunta": "¿Cuáles son las razones por las que los ingenieros de software siguen siendo esenciales?",
+            "esperado": [
+                382,
+                446
+            ],
+            "respuesta_esperada": "Entienden mejor la IA, la usan mejor para construir software y hacen mejor a la IA."
+        },
+        {
+            "id": "T7",
+            "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
+            "pregunta": "¿Qué tarea aburrida dice con humor que nos queda a los humanos?",
+            "esperado": [
+                270,
+                280
+            ],
+            "respuesta_esperada": "Manejar la política de la oficina."
+        },
+        {
+            "id": "T8",
+            "archivo": "Learning Software Engineering During the Era of AI Raymond Fu TEDxCSTU.mp3",
+            "pregunta": "¿Por qué dice que el ingeniero del futuro debe ser full stack?",
+            "esperado": [
+                598,
+                616
+            ],
+            "respuesta_esperada": "Porque ya no basta con especializarse solo en el frontend, el backend o la base de datos."
+        },
+        {
+            "id": "V1",
+            "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
+            "pregunta": "¿Cuánto más cuesta una filtración de datos cuando hay IA en la sombra?",
+            "esperado": [
+                80,
+                95
+            ],
+            "respuesta_esperada": "670 000 dólares más."
+        },
+        {
+            "id": "V2",
+            "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
+            "pregunta": "¿Cuántos deepfakes se catalogaron en 2023 y cuántos en 2025?",
+            "esperado": [
+                152,
+                169
+            ],
+            "respuesta_esperada": "Unos 500 000 en 2023 y 8 millones en 2025."
+        },
+        {
+            "id": "V3",
+            "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
+            "pregunta": "¿Qué puesto ocupa la inyección de prompts en la lista de OWASP para modelos de lenguaje?",
+            "esperado": [
+                253,
+                274
+            ],
+            "respuesta_esperada": "El primero, en 2023 y otra vez en 2025."
+        },
+        {
+            "id": "V4",
+            "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
+            "pregunta": "¿Qué es un ataque de cero clics con inyección de prompt indirecta contra un agente?",
+            "esperado": [
+                509,
+                532
+            ],
+            "respuesta_esperada": "Un correo con instrucciones ocultas que el agente lee y obedece, sin que el usuario haga nada."
+        },
+        {
+            "id": "V5",
+            "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
+            "pregunta": "¿Qué porcentaje de las cuentas es elegible para passkeys según la alianza FIDO?",
+            "esperado": [
+                1066,
+                1080
+            ],
+            "respuesta_esperada": "93 %."
+        },
+        {
+            "id": "V6",
+            "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
+            "pregunta": "¿Cuántas passkeys tiene el orador guardadas en su gestor de contraseñas?",
+            "esperado": [
+                1110,
+                1124
+            ],
+            "respuesta_esperada": "17."
+        },
+        {
+            "id": "V7",
+            "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
+            "pregunta": "¿Qué confesión hace el orador al final del video?",
+            "esperado": [
+                1139,
+                1160
+            ],
+            "respuesta_esperada": "Que construyó una máquina del tiempo y encontró el informe del futuro (es una broma)."
+        },
+        {
+            "id": "V8",
+            "archivo": "Cybersecurity-Trends-in-SnapYT.App.mp4",
+            "pregunta": "¿Qué problema puede causar la computación cuántica a la criptografía actual?",
+            "esperado": [
+                340,
+                362
+            ],
+            "respuesta_esperada": "Que en algún momento podrá romper toda la criptografía actual."
+        }
+    ]
 }

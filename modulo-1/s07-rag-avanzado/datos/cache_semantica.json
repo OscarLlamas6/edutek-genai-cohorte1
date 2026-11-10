@@ -1,101 +1,101 @@
 {
- "_nota": "Preguntas para la demo de caché semántica. 'parafrasis' dicen lo mismo que una pregunta del golden set con otras palabras (deben ACERTAR la caché). 'casi_iguales' se parecen mucho a una pregunta del golden set pero piden OTRO dato (deben FALLAR la caché: si acertaran, devolverían una respuesta equivocada). 'ajenas' no tienen nada que ver con el manual.",
- "parafrasis": [
-  {
-   "id": "G01",
-   "texto": "¿Cuál es el precio mensual del plan de 300 Mbps?"
-  },
-  {
-   "id": "G03",
-   "texto": "No quiero firmar permanencia, ¿cuánto cuesta la instalación?"
-  },
-  {
-   "id": "G05",
-   "texto": "¿Qué día me cortan el servicio si no pago la factura?"
-  },
-  {
-   "id": "G06",
-   "texto": "Si mi router sale defectuoso, ¿en cuánto tiempo me lo cambian?"
-  },
-  {
-   "id": "G07",
-   "texto": "Mi módem tiene una luz roja, ¿qué quiere decir?"
-  },
-  {
-   "id": "G02",
-   "texto": "¿Cuál de los planes incluye una IP fija?"
-  },
-  {
-   "id": "G10",
-   "texto": "Si cancelo antes de cumplir un año, ¿qué penalización pago?"
-  },
-  {
-   "id": "G11",
-   "texto": "¿Se puede pedir la baja del servicio por teléfono?"
-  },
-  {
-   "id": "G12",
-   "texto": "Me llamaron pidiendo un código que llegó por SMS, ¿debo dárselo?"
-  },
-  {
-   "id": "M01",
-   "texto": "Al cancelar, ¿cuántos días tengo para devolver el router y cuánto cuesta si lo extravié?"
-  },
-  {
-   "id": "M03",
-   "texto": "¿Qué plan incluye IP fija, y cuánto se paga de instalación sin permanencia?"
-  },
-  {
-   "id": "MS03",
-   "texto": "Estoy suspendido por falta de pago y pagaré hoy en una agencia, ¿cuánto demora la reactivación y qué documento llevo?"
-  }
- ],
- "casi_iguales": [
-  {
-   "id": "G01",
-   "texto": "¿Cuánto cuesta el plan de 600 Mbps?"
-  },
-  {
-   "id": "G03",
-   "texto": "Si firmo contrato de permanencia, ¿cuánto cuesta instalar?"
-  },
-  {
-   "id": "G05",
-   "texto": "¿Cuándo vence la factura?"
-  },
-  {
-   "id": "G06",
-   "texto": "¿Cuánto cuesta reemplazar un router que rompí yo?"
-  },
-  {
-   "id": "G01",
-   "texto": "¿Cuánto cuesta el plan de 100 Mbps?"
-  },
-  {
-   "id": "G10",
-   "texto": "Quiero cambiar de plan antes del año, ¿cuánto me cobran?"
-  },
-  {
-   "id": "G11",
-   "texto": "¿Puedo cancelar el servicio desde el portal Mi Andes?"
-  },
-  {
-   "id": "M01",
-   "texto": "Si me mudo, ¿en cuántos días debo avisar y cuánto cuesta el traslado?"
-  }
- ],
- "ajenas": [
-  {
-   "texto": "¿Cómo preparo un arroz con pollo?"
-  },
-  {
-   "texto": "¿Quién ganó el último mundial de fútbol?"
-  },
-  {
-   "texto": "Explícame qué es un contenedor de Docker."
-  },
-  {
-   "texto": "¿Qué hora es ahora en Tokio?"
-  }
- ]
+    "_nota": "Preguntas para la demo de caché semántica. 'parafrasis' dicen lo mismo que una pregunta del golden set con otras palabras (deben ACERTAR la caché). 'casi_iguales' se parecen mucho a una pregunta del golden set pero piden OTRO dato (deben FALLAR la caché: si acertaran, devolverían una respuesta equivocada). 'ajenas' no tienen nada que ver con el manual.",
+    "parafrasis": [
+        {
+            "id": "G01",
+            "texto": "¿Cuál es el precio mensual del plan de 300 Mbps?"
+        },
+        {
+            "id": "G03",
+            "texto": "No quiero firmar permanencia, ¿cuánto cuesta la instalación?"
+        },
+        {
+            "id": "G05",
+            "texto": "¿Qué día me cortan el servicio si no pago la factura?"
+        },
+        {
+            "id": "G06",
+            "texto": "Si mi router sale defectuoso, ¿en cuánto tiempo me lo cambian?"
+        },
+        {
+            "id": "G07",
+            "texto": "Mi módem tiene una luz roja, ¿qué quiere decir?"
+        },
+        {
+            "id": "G02",
+            "texto": "¿Cuál de los planes incluye una IP fija?"
+        },
+        {
+            "id": "G10",
+            "texto": "Si cancelo antes de cumplir un año, ¿qué penalización pago?"
+        },
+        {
+            "id": "G11",
+            "texto": "¿Se puede pedir la baja del servicio por teléfono?"
+        },
+        {
+            "id": "G12",
+            "texto": "Me llamaron pidiendo un código que llegó por SMS, ¿debo dárselo?"
+        },
+        {
+            "id": "M01",
+            "texto": "Al cancelar, ¿cuántos días tengo para devolver el router y cuánto cuesta si lo extravié?"
+        },
+        {
+            "id": "M03",
+            "texto": "¿Qué plan incluye IP fija, y cuánto se paga de instalación sin permanencia?"
+        },
+        {
+            "id": "MS03",
+            "texto": "Estoy suspendido por falta de pago y pagaré hoy en una agencia, ¿cuánto demora la reactivación y qué documento llevo?"
+        }
+    ],
+    "casi_iguales": [
+        {
+            "id": "G01",
+            "texto": "¿Cuánto cuesta el plan de 600 Mbps?"
+        },
+        {
+            "id": "G03",
+            "texto": "Si firmo contrato de permanencia, ¿cuánto cuesta instalar?"
+        },
+        {
+            "id": "G05",
+            "texto": "¿Cuándo vence la factura?"
+        },
+        {
+            "id": "G06",
+            "texto": "¿Cuánto cuesta reemplazar un router que rompí yo?"
+        },
+        {
+            "id": "G01",
+            "texto": "¿Cuánto cuesta el plan de 100 Mbps?"
+        },
+        {
+            "id": "G10",
+            "texto": "Quiero cambiar de plan antes del año, ¿cuánto me cobran?"
+        },
+        {
+            "id": "G11",
+            "texto": "¿Puedo cancelar el servicio desde el portal Mi Andes?"
+        },
+        {
+            "id": "M01",
+            "texto": "Si me mudo, ¿en cuántos días debo avisar y cuánto cuesta el traslado?"
+        }
+    ],
+    "ajenas": [
+        {
+            "texto": "¿Cómo preparo un arroz con pollo?"
+        },
+        {
+            "texto": "¿Quién ganó el último mundial de fútbol?"
+        },
+        {
+            "texto": "Explícame qué es un contenedor de Docker."
+        },
+        {
+            "texto": "¿Qué hora es ahora en Tokio?"
+        }
+    ]
 }
