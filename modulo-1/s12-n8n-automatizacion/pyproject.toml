@@ -1,0 +1,21 @@
+[project]
+name = "s12-n8n-automatizacion"
+version = "0.1.0"
+description = "Sesión 12 · Automatización con n8n y cierre del Módulo 1"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "python-dotenv>=1.0",
+    "requests>=2.32",
+]
+
+[dependency-groups]
+dev = [
+    "jupyterlab>=4.2",
+    "ipykernel>=6.29",
+    "ipywidgets>=8.1",
+    "nbconvert>=7.16",
+]
+
+[tool.uv]
+package = false

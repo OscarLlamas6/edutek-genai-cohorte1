@@ -61,7 +61,7 @@ uv run python agent.py --trace "¿Cómo está la VPN?"
 | `python-dotenv` | Leer credenciales del `.env` |
 | `jupyterlab`, `ipykernel`, `ipywidgets` | Ejecutar notebooks (grupo `dev`) |
 
-Versiones con las que se probó esta sesión (al preparar el curso): `langchain` 1.4.7 · `langchain-core` 1.7.0 · `langgraph` 1.2.18 · `langchain-anthropic` 1.7.6 · `langchain-openai` 1.7.3 · `anthropic` 1.17.0 · `openai` 3.39.0. El `uv.lock` las fija.
+Versiones con las que se probó esta sesión (al preparar el curso): `langchain` 1.5.0 · `langchain-core` 1.8.0 · `langgraph` 1.2.22 · `langchain-anthropic` 1.7.10 · `langchain-openai` 1.8.0 · `anthropic` 1.17.0 · `openai` 3.39.0. El `uv.lock` las fija.
 
 ## Instalación
 

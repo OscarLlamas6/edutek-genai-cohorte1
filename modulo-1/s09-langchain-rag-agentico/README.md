@@ -5,9 +5,10 @@
 ## Objetivos
 
 1. Recordar las piezas de un agente en LangChain 1.x y leer su traza.
-2. Usar las características que hacen utilizable a un agente: salida estructurada, streaming, middleware, memoria de corto plazo, contexto de ejecución y manejo de errores en herramientas.
+2. Usar las características que hacen utilizable a un agente: salida estructurada, streaming, middleware, ingeniería del bucle (topes, presupuesto de tokens y falta de progreso), memoria de corto y largo plazo, contexto de ejecución y manejo de errores en herramientas.
 3. Saber cuándo bajar de `create_agent` a un grafo propio con LangGraph.
 4. Explicar el **RAG agéntico**: qué decisiones pasan al modelo, qué patrones existen, qué cuesta y qué riesgos trae.
+5. Explicar **cómo se sirve un agente**: una API (FastAPI), el `session_id` como `thread_id`, un checkpointer persistente en Postgres y los clientes que la consumen (Streamlit, Bruno y una CLI con Click).
 
 La sesión es **teoría puntual con código mínimo**; la práctica completa vive en el repositorio `ai-agents-playground`, carpeta `langchain-agentic-rag`.
 
@@ -15,11 +16,11 @@ La sesión es **teoría puntual con código mínimo**; la práctica completa viv
 
 | Ruta | Qué es |
 | --- | --- |
-| [`s09_langchain_rag_agentico.ipynb`](s09_langchain_rag_agentico.ipynb) | **Notebook teórico** (12 partes, con un modelo de juguete que no necesita red) |
+| [`s09_langchain_rag_agentico.ipynb`](s09_langchain_rag_agentico.ipynb) | **Notebook teórico** (13 partes, de la 0 a la 12, con un modelo de juguete que no necesita red) |
 | [`MARCO_TEORICO.md`](MARCO_TEORICO.md) | Definiciones y conceptos de la sesión (sin código) |
 | `pyproject.toml`, `uv.lock`, `.python-version`, `requirements.txt` | Entorno de la sesión (**Python 3.12**) |
 
-La práctica: **`ai-agents-playground/langchain-agentic-rag/`** (repositorio aparte: <https://github.com/OscarLlamas6/ai-agents-playground>).
+La práctica: **`ai-agents-playground/langchain-agentic-rag/`** (RAG sobre Postgres + pgvector, API con FastAPI, interfaz en Streamlit, colección de Bruno y CLI con Click) (repositorio aparte: <https://github.com/OscarLlamas6/ai-agents-playground>).
 
 ## Requisitos
 
@@ -28,7 +29,7 @@ La práctica: **`ai-agents-playground/langchain-agentic-rag/`** (repositorio apa
 | **Python** | **3.12** (uv lo descarga si no lo tienes) |
 | **Programas** | `git` y [`uv`](../../docs/INSTALACION.md) (recomendado; ver [alternativas](../../docs/INSTALACION.md#5-alternativas-a-uv)) |
 | **Notebook** | No necesita llaves ni servidor: usa un modelo de juguete. Una celda opcional prueba un modelo real |
-| **Práctica** | LM Studio con `text-embedding-nomic-embed-text-v2-moe` y un modelo de ~12B o más (por ejemplo `google/gemma-4-12b-qat`), o un proveedor (Anthropic u OpenAI) |
+| **Práctica** | Docker (Postgres + pgvector), y un modelo: LM Studio con `text-embedding-nomic-embed-text-v2-moe` y un modelo de ~12B o más (por ejemplo `google/gemma-4-12b-qat`), o un proveedor (Anthropic u OpenAI), o el modelo de juguete `LLM_PROVIDER=fake` para ver el mecanismo sin llaves |
 | **Equipo** | 16 GB de RAM, sin GPU |
 
 ### Dependencias
@@ -38,7 +39,8 @@ La práctica: **`ai-agents-playground/langchain-agentic-rag/`** (repositorio apa
 | `langchain` | `create_agent`, `@tool`, mensajes, middleware, `init_chat_model` |
 | `langgraph` | El grafo sobre el que corre el agente; checkpointers |
 | `langchain-anthropic`, `langchain-openai` | Modelos de Anthropic y OpenAI (y LM Studio, vía el protocolo de OpenAI) |
-| `pydantic` | Esquemas de salida estructurada |
+| `pydantic` | Esquemas de salida estructurada y contratos de la API |
+| `fastapi`, `httpx` | Exponer el agente como API; en el notebook se usa `TestClient`, sin servidor |
 | `python-dotenv` | Leer credenciales del `.env` |
 | `jupyterlab`, `ipykernel`, `ipywidgets`, `nbconvert` | Notebooks (grupo `dev`) |
 
@@ -66,4 +68,4 @@ Detalle general en [`docs/COSTOS.md`](../../docs/COSTOS.md).
 
 ## Versiones probadas
 
-`langchain 1.4.9`, `langchain-core 1.7.6`, `langgraph 1.2.20`, `langchain-anthropic 1.7.10`, `langchain-openai 1.7.4`, `pydantic 2.14.3` (noviembre de 2026). El protocolo de streaming de eventos `v3` aparece como experimental en esta versión.
+`langchain 1.5.0`, `langchain-core 1.8.0`, `langgraph 1.2.22`, `langchain-anthropic 1.7.10`, `langchain-openai 1.8.0`, `pydantic 2.14.3` (noviembre de 2026). El protocolo de streaming de eventos `v3` aparece como experimental en esta versión.

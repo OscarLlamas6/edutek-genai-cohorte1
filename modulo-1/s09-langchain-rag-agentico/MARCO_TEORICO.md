@@ -8,12 +8,13 @@
 2. [Mensajes y `content_blocks`](#2-mensajes-y-content_blocks)
 3. [Salida estructurada](#3-salida-estructurada)
 4. [Streaming](#4-streaming)
-5. [Middleware](#5-middleware)
-6. [Memoria de corto plazo](#6-memoria-de-corto-plazo)
+5. [Middleware e ingeniería del bucle](#5-middleware-e-ingeniería-del-bucle)
+6. [Memoria de corto y largo plazo](#6-memoria-de-corto-y-largo-plazo)
 7. [Contexto de ejecución y errores en herramientas](#7-contexto-de-ejecución-y-errores-en-herramientas)
 8. [LangGraph por debajo y observabilidad](#8-langgraph-por-debajo-y-observabilidad)
 9. [RAG agéntico](#9-rag-agéntico)
-10. [Glosario rápido](#10-glosario-rápido)
+10. [Servir un agente: API, sesiones e interfaz](#10-servir-un-agente-api-sesiones-e-interfaz)
+11. [Glosario rápido](#11-glosario-rápido)
 
 ---
 
@@ -73,9 +74,9 @@
 | `messages` | Los tokens del modelo según se generan | Respuesta "en vivo" |
 | `custom` | Lo que una herramienta emite a propósito | Avisos de progreso de herramientas largas |
 
-- **Eventos (`stream_events`, protocolo v3):** forma que la documentación actual recomienda para aplicaciones nuevas; ofrece iteradores separados por proyección (mensajes, valores, llamadas a herramientas). En la versión probada está marcada como **experimental**.
+- **Eventos (`stream_events`, protocolo v3):** forma que la documentación actual recomienda para aplicaciones nuevas; ofrece iteradores separados por proyección (mensajes, valores, llamadas a herramientas). En la versión probada (`langgraph 1.2.22`) el protocolo v3 sigue marcado como **experimental** en el código, aunque la documentación lo recomienda. `stream_events` síncrono solo admite `version="v3"`; para los esquemas v1 y v2 se usa `astream_events`.
 
-## 5. Middleware
+## 5. Middleware e ingeniería del bucle
 
 - **Middleware:** código que se **engancha en puntos del bucle** para observar, modificar o limitar al agente **sin reescribirlo**. Equivale al middleware de un servidor web o a un *sidecar*: lógica transversal separada de la lógica de negocio.
 - **Ganchos:**
@@ -104,7 +105,22 @@
 
 - **Aprobación humana (*human-in-the-loop*):** defensa estándar para herramientas que **modifican** datos. El agente se **interrumpe**, guarda su estado y espera una decisión; después **se reanuda** con la decisión (aprobar, editar o rechazar).
 
-## 6. Memoria de corto plazo
+### 5.1. Ingeniería del bucle (*loop engineering*)
+
+Todo bucle de agente necesita tres cosas: **qué lo dispara** (la pregunta), **cómo se sabe que terminó** (el modelo responde sin pedir más herramientas) y **qué límites lo detienen** cuando algo sale mal.
+
+| Límite | Qué evita | Cómo se implementa |
+| --- | --- | --- |
+| Máximo de llamadas a herramientas | Buscar en círculos | `ToolCallLimitMiddleware` |
+| Máximo de vueltas del modelo | Un bucle que nunca cierra | `ModelCallLimitMiddleware` |
+| Presupuesto de tokens | Una pregunta que gasta de más | Middleware propio que suma el uso de tokens de cada respuesta |
+| Falta de progreso | Repetir la misma llamada esperando otro resultado | Middleware propio que compara nombre y argumentos de las llamadas |
+
+- **Analogía:** el `timeout`, el *circuit breaker* y el presupuesto de un servicio. Un agente sin límites es un proceso sin `ulimit`.
+- Los límites propios se escriben con un gancho **después del modelo** que puede **saltar al final** del bucle; el código, no el modelo, decide terminar, y deja un mensaje con el motivo.
+- Un límite sin plan de acción solo esconde el problema: hay que decidir qué hace la aplicación cuando un guardián corta (avisar, registrar, escalar a una persona).
+
+## 6. Memoria de corto y largo plazo
 
 - **Memoria de corto plazo:** capacidad del agente de recordar la conversación **dentro de un mismo hilo**.
 - **Checkpointer:** almacén que guarda el **estado** (los mensajes) tras cada paso. En memoria sirve para aprender; en producción se usa uno **persistente** (por ejemplo, sobre Postgres).
@@ -119,6 +135,21 @@
 | Resumir | Sustituir lo antiguo por un resumen | Cuesta una llamada; el resumen puede omitir detalles |
 
 - **Memoria de largo plazo:** información que persiste **entre conversaciones** (preferencias, datos del usuario); se guarda en un *store*, no en el historial del hilo.
+
+### 6.1. Memoria de largo plazo (*store*)
+
+- **Store:** almacén de clave-valor organizado por ***namespace*** (por ejemplo, un usuario). Guarda datos que deben sobrevivir **entre conversaciones** y entre ejecuciones del programa.
+- El **checkpointer** recuerda una conversación (el historial del hilo); el **store** recuerda hechos duraderos (preferencias, equipo, idioma), sin importar el hilo.
+
+| | Corto plazo | Largo plazo |
+| --- | --- | --- |
+| Pieza | Checkpointer + `thread_id` | *Store* + *namespace* |
+| Qué guarda | El historial de una conversación | Datos duraderos de un usuario o del sistema |
+| Quién escribe | El agente, automáticamente | Herramientas: el modelo decide qué vale la pena guardar |
+| Persistencia | En RAM se pierde; en producción, base de datos (p. ej. `PostgresSaver`) | Igual: en RAM se pierde; en producción, base de datos (p. ej. `PostgresStore`, en el mismo Postgres del agente) |
+
+- La **identidad** (el *namespace*) la inyecta el código mediante el contexto de ejecución, no el modelo: así un usuario no puede leer los datos de otro.
+- **Qué no guardar:** secretos, contraseñas y datos que el usuario no esperaría que se recordaran. Todo lo que se guarda es un dato personal con ciclo de vida: hay que poder consultarlo y borrarlo.
 
 ## 7. Contexto de ejecución y errores en herramientas
 
@@ -184,6 +215,16 @@ Las tres opciones **se combinan**: un agente puede tener como herramientas una b
 
 | Riesgo | Causa | Defensa |
 | --- | --- | --- |
+| pgvector | Extensión de Postgres que guarda vectores y busca por similitud |
+| Herramienta de escritura | Herramienta que modifica datos; debe ser acotada y de efecto limitado |
+| Bitácora de consultas | Registro de cada pregunta con tokens y herramientas; lo escribe el código |
+| API (FastAPI) | Interfaz HTTP del agente, con contratos Pydantic y documentación en `/docs` |
+| `session_id` | Identificador de sesión en la API; es el `thread_id` del checkpointer |
+| Servicio sin estado en el proceso | La conversación vive en el checkpointer (Postgres), no en la memoria del servidor |
+| Streamlit | Biblioteca de interfaces web sencillas; aquí consume la API |
+| Bruno | Cliente HTTP con colecciones en archivos de texto |
+| Click | Biblioteca para armar una CLI con comandos |
+| Ingesta | Fragmentar, vectorizar y guardar los documentos; paso aparte de las preguntas |
 | Inyección indirecta | Un documento recuperado contiene instrucciones y el modelo las obedece | Tratar lo recuperado como datos; mínimo privilegio; aprobación humana para acciones |
 | Bucle de búsquedas | El modelo reformula sin converger | Topes, límite de recursión, regla de abstención |
 | Citas inventadas | El modelo cita lo que nunca vio | Verificar en código que cada cita apunta a algo recuperado |
@@ -191,7 +232,27 @@ Las tres opciones **se combinan**: un agente puede tener como herramientas una b
 
 - **Evaluación:** por capas, como cualquier RAG, más lo propio del agente: si **buscó cuando debía y no cuando no**, la calidad de las consultas que formuló, el número de pasos y el costo, y si la respuesta es correcta y está respaldada por citas válidas; siempre contra un conjunto fijo de preguntas y con un tamaño de muestra honesto.
 
-## 10. Glosario rápido
+### 9.x. Más herramientas que el RAG, y herramientas que escriben
+
+- Un RAG agéntico es un agente con **la búsqueda como una herramienta entre varias**. Junto a ella pueden convivir herramientas de **consulta** (un ticket, un equipo en un inventario), de **cálculo** (un plazo en horas hábiles, que el modelo no debe hacer de cabeza) y de **escritura** (registrar algo en una base de datos). Entonces la decisión interesante del modelo es **cuál usar**, y a veces combinarlas.
+- **Herramienta de lectura:** no cambia nada; se puede reintentar sin riesgo.
+- **Herramienta de escritura:** cambia el mundo (una fila en una base). Su descripción debe decir **cuándo** usarla y cuándo no, y conviene que sea **aditiva** (agrega, no borra ni edita).
+- **Auditoría vs. acción:** una **auditoría** (bitácora de preguntas, tokens, herramientas usadas) debe escribirla el **código**, siempre, con un gancho posterior a la ejecución; no una herramienta. Un modelo puede olvidarse de llamarla y no conoce los tokens de su propia respuesta. Una **acción** (registrar un hueco del manual) sí la decide el modelo.
+- **Base vectorial en el agente:** los vectores del manual viven en **Postgres con pgvector** (la misma idea de la sesión de embeddings): la ingesta se hace una vez y cada búsqueda solo vectoriza la pregunta; la distancia coseno se calcula en la base. Las tablas de bitácora y de huecos viven en la misma base.
+
+## 10. Servir un agente: API, sesiones e interfaz
+
+- **Exponer un agente:** ponerlo detrás de una **API HTTP** para que lo usen otras personas y otros programas. Es la forma estándar de pasar de un notebook a un servicio.
+- **API (FastAPI):** recibe `POST /chat` con `{message, session_id, user_id}` y devuelve la respuesta, las herramientas usadas, las citas y los tokens. Los contratos de entrada y de salida son modelos **Pydantic**: validan sin escribir código (422 si el cuerpo es inválido) y generan la documentación interactiva en `/docs`. Códigos HTTP con sentido: 404 sesión inexistente, 503 si falta la ingesta.
+- **Sesión:** una conversación. El **`session_id`** de la API es el **`thread_id`** del checkpointer. Sin id, el servidor crea uno y lo **devuelve**; con id, continúa esa conversación. El cliente no guarda la conversación: solo el identificador.
+- **Servicio sin estado en el proceso:** el proceso de la API no guarda conversaciones. El estado vive en el **checkpointer persistente** (Postgres, con `PostgresSaver`), de modo que se puede reiniciar el servidor o tener varias réplicas y la sesión continúa. Con un checkpointer en RAM, las sesiones se pierden al reiniciar y cada réplica tendría su propia memoria.
+- **Analogía de infraestructura:** como un contenedor detrás de un balanceador: sin estado local, con el estado en una base de datos y una cookie de sesión en el cliente.
+- **Clientes de la API:** una **interfaz** sencilla (Streamlit) que solo habla HTTP con la API; un **cliente HTTP** (Bruno) para recorrerla paso a paso con colecciones versionables; `curl`; otro programa. La interfaz **no** importa el agente.
+- **CLI (Click):** comandos para tareas de operación: `ingest` (la **ingesta** del RAG), `ask`, `chat`, `log` y `serve`.
+- **Ingesta como paso aparte:** fragmentar, vectorizar y guardar el manual en pgvector es costoso y se hace **una vez** (con una huella del manual y del modelo de embeddings para saber si hace falta repetirlo). Las preguntas no deberían dispararla; si falta, se responde con un error claro en vez de gastar tokens.
+- **Modelo de juguete (`fake`):** un modelo determinista, sin llaves ni red, para demostrar el mecanismo (API, sesiones, bitácora, herramientas) con resultados repetibles. Demuestra el **mecanismo**, no la calidad de elección de un modelo real.
+
+## 11. Glosario rápido
 
 | Término | Definición |
 | --- | --- |

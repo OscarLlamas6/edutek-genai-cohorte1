@@ -1,0 +1,31 @@
+[project]
+name = "s10-mcp-herramientas"
+version = "0.1.0"
+description = "Sesión 10 · MCP: arquitectura, primitivas y un servidor propio"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "mcp==1.30.0",
+    "langchain-mcp-adapters==0.3.2",
+    "langchain>=1.5",
+    "langchain-anthropic>=1.0",
+    "langchain-openai>=1.0",
+    "langgraph>=1.0",
+    "pydantic>=2.8",
+    "python-dotenv>=1.0",
+    "fastapi>=0.163.0",
+    "httpx>=0.28.1",
+    "langgraph-checkpoint-sqlite>=3.1.3",
+    "aiosqlite>=0.22.1",
+]
+
+[dependency-groups]
+dev = [
+    "jupyterlab>=4.2",
+    "ipykernel>=6.29",
+    "ipywidgets>=8.1",
+    "nbconvert>=7.16",
+]
+
+[tool.uv]
+package = false

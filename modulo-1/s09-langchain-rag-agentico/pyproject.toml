@@ -5,10 +5,12 @@ description = "Sesión 9 · LangChain: características útiles y RAG agéntico"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
-    "langchain>=1.4",
+    "fastapi>=0.163.0",
+    "httpx>=0.28.1",
+    "langchain>=1.5",
     "langchain-anthropic>=1.0",
     "langchain-openai>=1.0",
-    "langgraph>=1.0",
+    "langgraph>=1.2.22",
     "pydantic>=2.8",
     "python-dotenv>=1.0",
 ]
