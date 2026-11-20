@@ -32,7 +32,7 @@ La práctica: **`ai-agents-playground/langchain-mcp-advanced-tooling/`** (reposi
 | **Programas** | `git` y [`uv`](../../docs/INSTALACION.md) (recomendado; ver [alternativas](../../docs/INSTALACION.md#5-alternativas-a-uv)) |
 | **Notebook** | No necesita llaves ni servidor. Las partes 4 y 7 descargan un paquete pequeño con `uvx` (necesita internet; sin `uvx`, la Parte 4 se omite y la 7 usa un reloj local) |
 | **Opcionales** | Node 22.23+ para el MCP Inspector; Claude Code o Claude Desktop para la Parte 8; Node 18+ para el CLI de Bruno de la práctica |
-| **Práctica** | Modo simulado sin cuenta. Opcional: cuenta gratuita de HubSpot con una Service Key; y un modelo (LM Studio, Anthropic u OpenAI) |
+| **Práctica** | Modo simulado sin cuenta. Opcional: cuenta gratuita de HubSpot con una Service Key (guía: [`docs/CUENTA_HUBSPOT.md`](../../docs/CUENTA_HUBSPOT.md)); y un modelo (LM Studio, Anthropic u OpenAI) |
 | **Equipo** | 16 GB de RAM, sin GPU |
 
 ### Dependencias

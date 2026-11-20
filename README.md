@@ -23,6 +23,7 @@ edutek-genai-cohorte1/
 │   ├── LMSTUDIO.md          ← configurar LM Studio (modelo local) paso a paso
 │   ├── COSTOS.md            ← qué consume dinero, cuánto y cómo protegerte
 │   ├── CUENTA_NEON.md       ← crear tu cuenta de Neon (PostgreSQL + pgvector), paso a paso
+│   ├── CUENTA_HUBSPOT.md    ← crear tu cuenta de HubSpot (CRM gratis) y conectarla al servidor MCP (Sesión 10)
 │   ├── CUENTA_PINECONE.md   ← crear tu cuenta de Pinecone (base vectorial), paso a paso
 │   └── PROVEEDORES.md       ← elegir Anthropic u OpenAI (y adaptar otros)
 └── modulo-1/

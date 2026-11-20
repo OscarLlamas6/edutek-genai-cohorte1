@@ -337,6 +337,7 @@ Debe imprimir algo como `Python 3.12.x · anthropic 1.x`. Para verificar tu API 
 Las sesiones de bases de datos vectoriales usan dos servicios con **plan gratuito**. Crea las cuentas siguiendo las guías (≈ 10 minutos cada una):
 
 - [`CUENTA_NEON.md`](CUENTA_NEON.md): PostgreSQL en la nube con pgvector.
+- [`CUENTA_HUBSPOT.md`](CUENTA_HUBSPOT.md): CRM gratuito para el servidor MCP de la Sesión 10 (opcional).
 - [`CUENTA_PINECONE.md`](CUENTA_PINECONE.md): base de datos vectorial administrada.
 
 También necesitas el **modelo de embeddings** en LM Studio (ver [`LMSTUDIO.md`](LMSTUDIO.md#2b-descargar-un-modelo-de-embeddings-sesiones-4-a-6)). Si no logras crear una cuenta, puedes seguir las sesiones con el almacén en memoria.
