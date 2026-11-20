@@ -35,7 +35,7 @@ Son los mismos cuatro del modo simulado (Ana Morales, Luis Pérez, Marta Solís 
 
 1. En el menú, entra a **CRM → Contactos**.
 2. Pulsa **Importar** (arriba a la derecha) → **Iniciar una importación** → **Archivo de computadora** → **Un archivo** → **Contactos**.
-3. Elige `ai-agents-playground/langchain-mcp-advanced-tooling/data/hubspot_contactos.csv`.
+3. Elige `ai-agents-playground/langchain-mcp-advanced-tooling/samples/hubspot_contactos.csv`.
 4. En el mapeo de columnas, comprueba que cada columna del CSV quede asignada a su propiedad (nombre, apellido, correo, teléfono, empresa, cargo, etapa del ciclo de vida) y termina la importación.
 
 **B. A mano.** En **Contactos → Crear contacto**, escribe los cuatro con los datos del CSV (abre el archivo para copiarlos).
